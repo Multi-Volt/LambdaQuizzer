@@ -101,6 +101,7 @@ Music by Kevin MacLeod ([incompetech.com](https://incompetech.com)):
   - "Meatball Parade"
   - "Mystery!"
   - "Newer Wave"
+  - "One-eyed Maestro"
   - "Outfoxing the Fox"
   - "Raving Energy (faster)"
   - "Run Amok"
