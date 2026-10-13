@@ -117,7 +117,7 @@ Music by Kevin MacLeod ([incompetech.com](https://incompetech.com)):
 Sound effects:
 
 - Interface sounds, jingles and hits by [Kenney](https://kenney.nl) (CC0): click, pop, countdown,
-  go, tick, wrong, podium hit
+  go, tick, wrong
 - Royalty-free sounds from [Pixabay](https://pixabay.com):
   - floraphonic: "You Win Sequence 1/2/3", "Tada Military 1/2/3", "Level Up Bonus Sequence 2",
     "Cute Level Up 3", "Bloop 1", "90s Game UI 6"

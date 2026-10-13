@@ -209,7 +209,7 @@ def run(browser):
             host.click('#nextBtn')
 
     check(music.get('itty-bitty-8-bit.mp3') in (200, 206), 'results music file loads')
-    check(len([f for f in sfx if sfx[f] == 200]) >= 16, f'sound effect files load ({len(sfx)})')
+    check(len([f for f in sfx if sfx[f] == 200]) >= 15, f'sound effect files load ({len(sfx)})')
     q_tracks = [f for f, st in music.items() if st in (200, 206) and f.endswith('.mp3') and f not in ('monkeys-spinning-monkeys.mp3', 'itty-bitty-8-bit.mp3')]
     check(len(q_tracks) >= 2, f'question music shuffles between tracks ({", ".join(sorted(q_tracks))})')
     host.wait_for_selector('#pod1.show', timeout=10000)

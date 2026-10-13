@@ -492,9 +492,9 @@
       </div>
     </div>`;
     A.sfx('drumroll', 4.7);   // rolls under the 3rd and 2nd place reveals, cuts off as 1st lands
-    const reveal = (place, at, sound) => later(at, () => { const el = $('#pod' + place); if (el) el.classList.add('show'); A.sfx(sound); });
-    reveal(3, 2500, 'hit');
-    reveal(2, 3500, 'hit');
+    const reveal = (place, at) => later(at, () => { const el = $('#pod' + place); if (el) el.classList.add('show'); });
+    reveal(3, 2500);
+    reveal(2, 3500);
     later(4700, () => {
       const el = $('#pod1'); if (el) el.classList.add('show');
       A.sfx('fanfare');

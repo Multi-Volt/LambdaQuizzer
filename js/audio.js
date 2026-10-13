@@ -264,11 +264,6 @@
       kick(t + dur, sfxBus, 0.9);
       noise({ t: t + dur, dur: 1.4, vol: 0.18, ftype: 'highpass', freq: 5000 });
     },
-    hit(t) {
-      kick(t, sfxBus, 0.9);
-      [60, 64, 67].forEach(n => tone({ type: 'sawtooth', freq: mtof(n), t, dur: 0.5, vol: 0.06, filter: { freq: 2500, to: 600 }, pluck: true }));
-      noise({ t, dur: 0.8, vol: 0.12, ftype: 'highpass', freq: 6000 });
-    },
     fanfare(t) {
       const brass = (n, at, d, v) => {
         tone({ type: 'sawtooth', freq: mtof(n), t: t + at, dur: d, vol: v, filter: { freq: 600, to: 3000 }, attack: 0.03, vibrato: d > 0.5 ? 4 : 0 });
@@ -297,7 +292,7 @@
     click: 'click.mp3', join: 'join.mp3', pop: 'pop.mp3', submit: 'submit.mp3',
     count: 'count.mp3', go: 'go.mp3', whoosh: 'whoosh.mp3', tickUrgent: 'tick-urgent.mp3',
     correct: 'correct.mp3', wrong: 'wrong.mp3', streak: 'streak.mp3', ding: 'ding.mp3',
-    drumroll: 'drumroll.mp3', hit: 'hit.mp3',
+    drumroll: 'drumroll.mp3',
     fanfare: ['fanfare-1.mp3', 'fanfare-2.mp3', 'fanfare-3.mp3', 'fanfare-4.mp3'],
     win: ['win-1.mp3', 'win-2.mp3', 'win-3.mp3']
   };
