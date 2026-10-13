@@ -103,39 +103,79 @@
 
   /* ---------- music: Incompetech tracks by Kevin MacLeod, streamed from assets/music ---------- */
 
-  // restart: start from the top every time (the question timer music); otherwise resume.
+  // Each entry is a file name, or { file, start } to skip a quiet intro (seconds).
+  // shuffle: pick a random file (never the same twice in a row) and start it from the top every time.
+  // Otherwise the single track resumes where it left off.
+  const MUSIC_DIR = 'assets/music/';
   const TRACKS = {
-    lobby: { src: 'assets/music/monkeys-spinning-monkeys.mp3' },
-    question: { src: 'assets/music/ouroboros.mp3', restart: true },
-    results: { src: 'assets/music/itty-bitty-8-bit.mp3' }
+    lobby: { files: ['monkeys-spinning-monkeys.mp3'] },
+    question: {
+      shuffle: true,
+      files: [
+        'i-got-a-stick-arr-bryan-teoh.mp3',
+        { file: 'newer-wave.mp3', start: 1.5 },
+        'raving-energy-faster.mp3',
+        'voxel-revolution.mp3',
+        'cyborg-ninja.mp3',
+        'pinball-spring-160.mp3',
+        'laserpack.mp3',
+        'jaunty-gumption.mp3',
+        'bit-shift.mp3',
+        'happy-happy-game-show.mp3'
+      ]
+    },
+    results: { files: ['itty-bitty-8-bit.mp3'] }
   };
-  const decks = {}; // track name -> { el, gain, stopTimer }
-  let songName = null;
+  const decks = {};     // file -> { el, gain, stopTimer }
+  const cued = {};      // track name -> entry for its next play
+  const lastPick = {};  // track name -> file played last time
+  let songName = null, songDeck = null;
 
-  function deck(name) {
-    if (decks[name]) return decks[name];
-    const el = new Audio(TRACKS[name].src);
+  const entry = f => typeof f === 'string' ? { file: f, start: 0 } : { file: f.file, start: f.start || 0 };
+
+  function deck(file) {
+    if (decks[file]) return decks[file];
+    const el = new Audio(MUSIC_DIR + file);
     el.loop = true;
     el.preload = 'auto';
     const gain = ctx.createGain();
     gain.gain.value = 0;
     ctx.createMediaElementSource(el).connect(gain);
     gain.connect(musicBus);
-    return (decks[name] = { el, gain, stopTimer: null });
+    return (decks[file] = { el, gain, stopTimer: null });
+  }
+
+  function pickFor(name) {
+    const t = TRACKS[name];
+    const list = t.files.map(entry);
+    if (!t.shuffle || list.length === 1) return list[0];
+    const choices = list.filter(e => e.file !== lastPick[name]);
+    return choices[Math.floor(Math.random() * choices.length)];
+  }
+
+  // Choose (and start buffering) what a track will play next.
+  function cueMusic(name) {
+    if (!init() || !TRACKS[name]) return;
+    if (!cued[name]) cued[name] = pickFor(name);
+    deck(cued[name].file);
   }
 
   function preloadMusic() {
     if (!init()) return;
-    Object.keys(TRACKS).forEach(deck);
+    Object.keys(TRACKS).forEach(cueMusic);
   }
 
   function playMusic(name) {
     if (!init() || !TRACKS[name] || songName === name) return;
     stopMusic(0.4);
+    const t = TRACKS[name];
+    const e = cued[name] || pickFor(name);
+    cued[name] = t.shuffle ? null : e;
+    lastPick[name] = e.file;
     songName = name;
-    const d = deck(name);
+    const d = songDeck = deck(e.file);
     clearTimeout(d.stopTimer);
-    if (TRACKS[name].restart) d.el.currentTime = 0;
+    if (t.shuffle) d.el.currentTime = e.start;
     const now = ctx.currentTime;
     d.gain.gain.cancelScheduledValues(now);
     d.gain.gain.setValueAtTime(d.gain.gain.value, now);
@@ -145,17 +185,16 @@
   }
 
   function stopMusic(fade) {
-    const name = songName;
-    songName = null;
-    if (!name || !ctx) return;
-    const d = decks[name];
+    const d = songDeck;
+    songName = null; songDeck = null;
+    if (!d || !ctx) return;
     const f = fade == null ? 0.3 : fade;
     const now = ctx.currentTime;
     d.gain.gain.cancelScheduledValues(now);
     d.gain.gain.setValueAtTime(d.gain.gain.value, now);
     d.gain.gain.linearRampToValueAtTime(0, now + f);
     clearTimeout(d.stopTimer);
-    d.stopTimer = setTimeout(() => { if (songName !== name) d.el.pause(); }, f * 1000 + 60);
+    d.stopTimer = setTimeout(() => { if (songDeck !== d) d.el.pause(); }, f * 1000 + 60);
   }
 
   /* ---------- sound effects ---------- */
@@ -251,7 +290,7 @@
   }
 
   window.LQAudio = {
-    unlock: init, preloadMusic, playMusic, stopMusic, sfx, setMusic, setSfx,
+    unlock: init, preloadMusic, cueMusic, playMusic, stopMusic, sfx, setMusic, setSfx,
     get musicOn() { return prefs.music; },
     get sfxOn() { return prefs.sfx; },
     get playing() { return songName; }

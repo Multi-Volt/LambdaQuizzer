@@ -39,6 +39,7 @@
       phase: 'connecting', qi: -1, cur: null, answers: new Map(), locked: false, timers: [], tick: null, qStart: 0, lastSec: null
     };
     LQEditor.showView('game');
+    document.documentElement.classList.add('in-game');
     const tg = $('#gbToggles');
     tg.innerHTML = '';
     tg.appendChild(LQ.audioToggles());
@@ -56,6 +57,7 @@
     G.players.forEach(p => { try { p.conn && p.conn.close(); } catch (e) { /* closed */ } });
     try { G.peer && G.peer.destroy(); } catch (e) { /* closed */ }
     A.stopMusic();
+    document.documentElement.classList.remove('in-game');
     G = null;
   }
 
@@ -180,7 +182,7 @@
 
   function renderLobby() {
     $('#gbPin').hidden = true;
-    $('#gbInfo').textContent = '';
+    $('#gbInfo').innerHTML = '<div class="gb-q">Waiting for players</div>';
     const qr = qrcode(0, 'M');
     qr.addData(joinUrl(G.pin));
     qr.make();
@@ -244,8 +246,10 @@
     nextQuestion();
   }
 
-  function setInfo() {
-    $('#gbInfo').textContent = `${G.qi + 1} of ${G.qs.length}`;
+  function setInfo(label) {
+    const n = G.qs.length;
+    const segs = n <= 30 ? `<div class="gb-progress">${G.qs.map((_, i) => `<i class="${i < G.qi ? 'done' : i === G.qi ? 'now' : ''}"></i>`).join('')}</div>` : '';
+    $('#gbInfo').innerHTML = label ? `<div class="gb-q">${esc(label)}</div>` : `<div class="gb-q">Question <b>${G.qi + 1}</b> of ${n}</div>${segs}`;
   }
 
   function nextQuestion() {
@@ -262,6 +266,7 @@
     G.phase = 'getready';
     setInfo();
     A.stopMusic(0.4);
+    A.cueMusic('question');
     A.sfx('whoosh');
     broadcast({ t: 'getready', q: G.qi, total: G.qs.length });
     const label = G.qi === G.qs.length - 1 ? 'Last question!' : `Question ${G.qi + 1}`;
@@ -278,7 +283,7 @@
   }
 
   function imageHtml(c) {
-    return c.image ? `<div class="q-image"><img src="${esc(c.image)}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>` : '';
+    return c.image ? `<div class="q-image"><img src="${esc(c.image)}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.classList.add('broken')"></div>` : '';
   }
 
   function reading() {
@@ -288,7 +293,7 @@
     A.sfx('go');
     stage().innerHTML = `<div class="reading">
       <h1 class="q-text big">${esc(c.text)}</h1>
-      ${imageHtml(c)}
+      ${imageHtml(c) || '<div class="q-image empty"></div>'}
       <div class="read-bar"><i style="animation-duration:${ms}ms"></i></div>
     </div>`;
     later(ms, answering);
@@ -313,9 +318,11 @@
       <div class="q-mid">
         <div class="timer-ring" id="tRing" style="--p:1"><span id="tLeft">${c.time}</span></div>
         ${imageHtml(c) || '<div class="q-image placeholder"><img src="assets/logo.svg" alt=""></div>'}
-        <div class="ans-count"><b id="aCount">0</b><span>Answers</span></div>
+        <div class="q-side">
+          <div class="ans-count"><b id="aCount">0</b><span>Answers</span></div>
+          <button class="btn ghost small" id="skipBtn" type="button">Skip</button>
+        </div>
       </div>
-      <div class="q-skip"><button class="btn ghost" id="skipBtn" type="button">Skip</button></div>
       ${answerTiles(c, false)}
     </div>`;
     $('#skipBtn').onclick = endQuestion;
@@ -460,8 +467,7 @@
   function showPodium() {
     clearTimers();
     G.phase = 'podium';
-    setInfo();
-    $('#gbInfo').textContent = 'Final results';
+    setInfo('Final results');
     A.stopMusic(0.3);
     const order = ranked();
     broadcast(endMsg);

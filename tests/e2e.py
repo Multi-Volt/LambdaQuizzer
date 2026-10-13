@@ -18,7 +18,7 @@ BASE = f'http://localhost:{PORT}/'
 QUIZ = {
     'id': 'e2etest', 'title': 'E2E Quiz', 'description': 'test', 'updated': 9e12,
     'questions': [
-        {'id': 'q1', 'type': 'quiz', 'text': 'What does λ stand for?', 'image': '', 'time': 20, 'points': 1,
+        {'id': 'q1', 'type': 'quiz', 'text': 'What does λ stand for?', 'image': 'tests/fixtures/checker.png', 'time': 20, 'points': 1,
          'answers': ['A loop', 'A function', 'A type', ''], 'correct': [1]},
         {'id': 'q2', 'type': 'tf', 'text': 'Arrays start at 0.', 'image': '', 'time': 10, 'points': 2,
          'answers': ['True', 'False', '', ''], 'correct': [0]},
@@ -66,7 +66,7 @@ def watch(page, who):
 
 
 def run(browser):
-    hctx = browser.new_context(viewport={'width': 1366, 'height': 800})
+    hctx = browser.new_context(viewport={'width': 2557, 'height': 1355})
     hctx.add_init_script(f"localStorage.setItem('lq-quizzes-v1', JSON.stringify([{json.dumps(QUIZ)}]))")
     host = hctx.new_page()
     watch(host, 'host')
@@ -147,6 +147,16 @@ def run(browser):
         host.wait_for_selector('.answering', timeout=10000)
         if qi == 0:
             host.screenshot(path=f'{OUT}/answering.png')
+            box = host.locator('.q-image img').bounding_box()
+            check(box and box['height'] > 400, f'question image fills the free space ({box and int(box["height"])}px tall)')
+            tiles = host.locator('.tiles').bounding_box()
+            check(tiles['y'] + tiles['height'] <= 1355, 'answer tiles fit on screen')
+            host.set_viewport_size({'width': 1366, 'height': 768})
+            host.wait_for_timeout(200)
+            host.screenshot(path=f'{OUT}/answering_laptop.png')
+            tiles = host.locator('.tiles').bounding_box()
+            check(tiles['y'] + tiles['height'] <= 768, 'answer tiles fit on a laptop screen')
+            host.set_viewport_size({'width': 2557, 'height': 1355})
         if qi == 1:
             # Grace refreshes her phone mid-question and should land back on the answer screen.
             players['Grace'].reload()
@@ -181,7 +191,9 @@ def run(browser):
                 host.screenshot(path=f'{OUT}/scoreboard.png')
             host.click('#nextBtn')
 
-    check(all(music.get(f) in (200, 206) for f in ('ouroboros.mp3', 'itty-bitty-8-bit.mp3')), 'question and results music files load')
+    check(music.get('itty-bitty-8-bit.mp3') in (200, 206), 'results music file loads')
+    q_tracks = [f for f, st in music.items() if st in (200, 206) and f not in ('monkeys-spinning-monkeys.mp3', 'itty-bitty-8-bit.mp3')]
+    check(len(q_tracks) >= 2, f'question music shuffles between tracks ({", ".join(sorted(q_tracks))})')
     host.wait_for_selector('#pod1.show', timeout=10000)
     host.wait_for_timeout(1200)
     host.screenshot(path=f'{OUT}/podium.png')

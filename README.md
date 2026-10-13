@@ -39,7 +39,8 @@ host's peer name); game traffic then goes peer-to-peer, through PeerJS's public 
 network blocks direct connections. Some locked-down campus networks block WebRTC entirely; if
 students can't join, have them switch to mobile data.
 
-To swap music, drop MP3s in `assets/music/` and change the `TRACKS` list in `js/audio.js`.
+To change the music, drop MP3s in `assets/music/` and edit the `TRACKS` list in `js/audio.js`. The
+question playlist can hold any number of tracks; one is picked at random each question.
 
 Libraries are vendored in `vendor/` (PeerJS 1.5.4, qrcode-generator 1.4.4). The font is
 Space Grotesk from Google Fonts.
@@ -74,10 +75,13 @@ the podium, and the CSV download.
 
 ## Credits
 
-Music by Kevin MacLeod ([incompetech.com](https://incompetech.com)):
+Music by Kevin MacLeod ([incompetech.com](https://incompetech.com)), loudness-matched and
+re-encoded at 128 kbps:
 
 - Lobby: "Monkeys Spinning Monkeys"
-- Questions: "Ouroboros"
+- Questions (a random one each question): "I Got a Stick Arr Bryan Teoh", "Newer Wave",
+  "Raving Energy (faster)", "Voxel Revolution", "Cyborg Ninja", "Pinball Spring 160",
+  "Laserpack", "Jaunty Gumption", "Bit Shift", "Happy Happy Game Show"
 - Scoreboard and results: "Itty Bitty 8 Bit"
 
 Used under a license from incompetech. Without a paid license these tracks are available under
