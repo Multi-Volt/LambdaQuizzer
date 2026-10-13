@@ -121,7 +121,6 @@ Sound effects:
 - Royalty-free sounds from [Pixabay](https://pixabay.com):
   - floraphonic: "You Win Sequence 1/2/3", "Tada Military 1/2/3", "Level Up Bonus Sequence 2",
     "Cute Level Up 3", "Bloop 1", "90s Game UI 6"
-  - scratchonix: "Drum Roll for Victory"
   - u_ss015dykrt: "Brass Fanfare with Timpani and Winchimes"
-  - freesound_community: "Ding"
+  - freesound_community: "Timpani Roll", "Ding"
   - Universfield: "Swoosh 015"
