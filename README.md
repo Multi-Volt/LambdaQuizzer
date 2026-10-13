@@ -97,11 +97,11 @@ Music by Kevin MacLeod ([incompetech.com](https://incompetech.com)):
   - "Jaunty Gumption"
   - "Local Forecast - Slower"
   - "Newer Wave"
+  - "Outfoxing the Fox"
   - "Raving Energy (faster)"
   - "Run Amok"
   - "Scheming Weasel (faster version)"
   - "Sneaky Snitch"
   - "The Complex"
-  - "Voxel Revolution"
 - Scoreboard and results: "Itty Bitty 8 Bit"
 <!-- music-credits:end -->

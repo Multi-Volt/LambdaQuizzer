@@ -127,6 +127,14 @@ def question_files():
 def rebuild(pieces=None):
     """Write tracks.json and the README credits from what is actually on disk."""
     files = question_files()
+    try:
+        with open(os.path.join(QUESTION, 'tracks.json'), encoding='utf-8') as f:
+            before = json.load(f)
+    except (OSError, ValueError):
+        before = []
+    old_credits = load_credits()
+    for gone in sorted(set(before) - set(files)):
+        print(f'− {old_credits.get("question/" + gone, gone)} is no longer in the folder: removed from the playlist and credits')
     with open(os.path.join(QUESTION, 'tracks.json'), 'w', encoding='utf-8') as f:
         json.dump(files, f, indent=1, ensure_ascii=False)
         f.write('\n')
@@ -141,6 +149,9 @@ def rebuild(pieces=None):
             return p['title']
         return os.path.splitext(os.path.basename(rel))[0]
     lobby, results = js_track('lobby'), js_track('results')
+    for slot, fn in (('lobby', lobby), ('results', results)):
+        if fn and not os.path.exists(os.path.join(MUSIC, fn)):
+            print(f'! {slot} music file assets/music/{fn} is missing. Pick a new one with: python3 tools/music.py add "Title" --to {slot}')
     q_titles = [title('question/' + f) for f in files]
     lobby_title = title(lobby) if lobby else None
     results_title = title(results) if results else None
