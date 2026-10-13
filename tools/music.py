@@ -245,8 +245,8 @@ def tidy(pieces):
     credits = load_credits()
     for f in question_files():
         stem, ext = os.path.splitext(f)
-        if re.fullmatch(r'[a-z0-9-]+', stem) and ext == '.mp3':
-            continue  # already managed
+        if re.fullmatch(r'[a-z0-9-]+', stem) and ext == '.mp3' and 'question/' + f in credits:
+            continue  # already processed by this script
         p = from_filename(pieces, f)
         title = p['title'] if p else urllib.parse.unquote(stem).replace('_20', ' ')
         out = kebab(title) + '.mp3'

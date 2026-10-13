@@ -94,8 +94,12 @@ Music by Kevin MacLeod ([incompetech.com](https://incompetech.com)):
 - Questions (a random one each question):
   - "Carnivale Intrigue"
   - "Cipher"
+  - "Goblin Tinker Soldier Spy"
   - "Jaunty Gumption"
   - "Local Forecast - Slower"
+  - "Lord of the Rangs"
+  - "Meatball Parade"
+  - "Mystery!"
   - "Newer Wave"
   - "Outfoxing the Fox"
   - "Raving Energy (faster)"
@@ -103,5 +107,6 @@ Music by Kevin MacLeod ([incompetech.com](https://incompetech.com)):
   - "Scheming Weasel (faster version)"
   - "Sneaky Snitch"
   - "The Complex"
+  - "Waltz of the Carnies"
 - Scoreboard and results: "Itty Bitty 8 Bit"
 <!-- music-credits:end -->
