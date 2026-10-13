@@ -276,7 +276,7 @@
     </div>`);
     // Wait for the podium reveal on the big screen before celebrating.
     setTimeout(() => {
-      if (m.rank <= 3) { A.sfx('fanfare'); LQ.confetti(4000); } else A.sfx('ding');
+      if (m.rank <= 3) { A.sfx('win'); LQ.confetti(4000); } else A.sfx('ding');
     }, 4700);
     ss.del('lq-name-' + S.pin);
     ss.del('lq-token-' + S.pin);

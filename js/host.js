@@ -272,12 +272,13 @@
     const label = G.qi === G.qs.length - 1 ? 'Last question!' : `Question ${G.qi + 1}`;
     stage().innerHTML = `<div class="getready">
       <div class="gr-label">${label}</div>
-      <div class="gr-count"><span id="grNum">${GET_READY_SECS}</span></div>
+      <div class="gr-count"><span id="grNum"></span></div>
       <div class="gr-sub">${G.cur.tf ? 'True or false' : 'Quiz'}${G.cur.points === 2 ? ' · <b>Double points!</b>' : G.cur.points === 0 ? ' · No points' : ''}</div>
     </div>`;
+    LQ.centerText($('#grNum'), GET_READY_SECS);
     A.sfx('count');
     for (let i = 1; i < GET_READY_SECS; i++) {
-      later(i * 1000, () => { const el = $('#grNum'); if (el) { el.textContent = GET_READY_SECS - i; el.parentNode.classList.remove('bump'); void el.offsetWidth; el.parentNode.classList.add('bump'); } A.sfx('count'); });
+      later(i * 1000, () => { const el = $('#grNum'); if (el) { LQ.centerText(el, GET_READY_SECS - i); el.parentNode.classList.remove('bump'); void el.offsetWidth; el.parentNode.classList.add('bump'); } A.sfx('count'); });
     }
     later(GET_READY_SECS * 1000, reading);
   }
@@ -316,7 +317,7 @@
     stage().innerHTML = `<div class="answering">
       <div class="q-banner"><h1 class="q-text">${esc(c.text)}</h1></div>
       <div class="q-mid">
-        <div class="timer-ring" id="tRing"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="tr-track" cx="50" cy="50" r="45"/><circle class="tr-arc" id="tArc" cx="50" cy="50" r="45" pathLength="100" stroke-dasharray="100 100"/></svg><span id="tLeft">${c.time}</span></div>
+        <div class="timer-ring" id="tRing"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="tr-track" cx="50" cy="50" r="45"/><circle class="tr-arc" id="tArc" cx="50" cy="50" r="45" pathLength="100" stroke-dasharray="100 100"/></svg><span id="tLeft"></span></div>
         ${imageHtml(c) || '<div class="q-image placeholder"><img src="assets/logo.svg" alt=""></div>'}
         <div class="q-side">
           <div class="ans-count"><b id="aCount">0</b><span>Answers</span></div>
@@ -325,6 +326,7 @@
       </div>
       ${answerTiles(c, false)}
     </div>`;
+    LQ.centerText($('#tLeft'), c.time);
     $('#skipBtn').onclick = endQuestion;
     broadcast(questionMsg());
     A.playMusic('question');
@@ -332,7 +334,7 @@
       const left = c.time - (performance.now() - G.qStart) / 1000;
       const sec = Math.max(0, Math.ceil(left));
       const el = $('#tLeft');
-      if (el) el.textContent = sec;
+      if (el && el.textContent !== String(sec)) LQ.centerText(el, sec);
       const arc = $('#tArc');
       if (arc) arc.setAttribute('stroke-dasharray', `${(Math.max(0, left / c.time) * 100).toFixed(2)} 100`);
       if (sec !== G.lastSec) {

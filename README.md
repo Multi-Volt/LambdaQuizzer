@@ -12,9 +12,10 @@ A free live quiz game for college classes and review sessions. It is a static si
   buttons on phones (α β γ δ, or ⊤ / ⊥ for true/false), an answer chart, a scoreboard after
   every question, hot-streak bonuses, and a podium with confetti at the end.
 - **Music and sound effects.** Background music is by Kevin MacLeod (see Credits). The sound
-  effects (players joining, ticking clock, gong, correct, wrong, drumroll, fanfare) are synthesized
-  live with the Web Audio API (`js/audio.js`), so they need no audio files. Music and sound each
-  have a mute button.
+  effects are royalty-free files in `assets/sfx/`, one per event (`join.mp3`, `correct.mp3`,
+  `drumroll.mp3`, ...). Replace a file to change a sound; open `tools/sfx-preview.html` from a local
+  server to hear them all. Any effect without a file falls back to a synthesized version in
+  `js/audio.js`. Music and sound each have a mute button.
 - **Editable flavor text.** The quips students see after answering, on the scoreboard and at the
   end are all in `js/messages.js`. Add, remove or rewrite lines; one is picked at random each time.
 - **Host tools:** remove a player by clicking their name in the lobby, lock the lobby, skip a
@@ -112,3 +113,11 @@ Music by Kevin MacLeod ([incompetech.com](https://incompetech.com)):
   - "Waltz of the Carnies"
 - Scoreboard and results: "Itty Bitty 8 Bit"
 <!-- music-credits:end -->
+
+Sound effects:
+
+- Interface sounds, jingles and hits by [Kenney](https://kenney.nl) (CC0): click, join, pop, submit,
+  countdown, go, tick, correct, wrong, streak, podium hit
+- Royalty-free sounds from [Pixabay](https://pixabay.com): "Timpani Roll" (freesound_community),
+  "Brass Fanfare with Timpani and Winchimes" (u_ss015dykrt), "You Win Sequence 2" (floraphonic),
+  "Ding" (freesound_community), "Swoosh 015" (Universfield)

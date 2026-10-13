@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sound Preview · LambdaQuizzer</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    main { max-width: 760px; margin: 0 auto; padding: 2rem 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: .7rem; margin-top: 1.2rem; }
+    .grid button { text-align: left; padding: .8rem 1rem; border-radius: 12px; border: 1px solid var(--panel-line); background: var(--panel); color: #fff; cursor: pointer; }
+    .grid button:hover { background: var(--panel-2); }
+    .grid b { display: block; font-size: 1.05rem; }
+    .grid small { color: var(--text-dim); }
+    code { background: rgba(255,255,255,.08); padding: .1rem .35rem; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Sound effects</h1>
+    <p class="muted">Click to play. To swap a sound, replace the file in <code>assets/sfx/</code> with the same name.
+      Serve the repo first (<code>python3 -m http.server</code>, then open <code>localhost:8000/tools/sfx-preview.html</code>);
+      opened straight from disk the browser blocks the files and you hear the synthesized fallbacks.</p>
+    <div class="grid" id="grid"></div>
+  </main>
+  <script src="../js/audio.js"></script>
+  <script>
+    const USES = {
+      click: 'Buttons', join: 'Player joins the lobby', pop: 'Host kicks a player', submit: 'Player locks in an answer',
+      whoosh: 'Get ready / scoreboard', count: 'Get-ready countdown', go: 'Question appears', tickUrgent: 'Last 5 seconds',
+      correct: 'Player was right', wrong: 'Player was wrong', streak: 'Answer streak of 3+', drumroll: 'Before the podium',
+      hit: '3rd and 2nd place reveal', fanfare: 'Winner reveal (big screen)', win: 'Top 3 finish (phones)', ding: '4th place and below (phones)'
+    };
+    document.getElementById('grid').innerHTML = Object.entries(USES).map(([k, v]) => `<button data-k="${k}"><b>${k}</b><small>${v}</small></button>`).join('');
+    document.getElementById('grid').onclick = e => { const b = e.target.closest('button'); if (b) LQAudio.sfx(b.dataset.k); };
+  </script>
+</body>
+</html>

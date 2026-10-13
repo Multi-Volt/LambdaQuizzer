@@ -1,4 +1,5 @@
-/* LambdaQuizzer audio: background music (Incompetech MP3s) and sound effects synthesized with Web Audio. */
+/* LambdaQuizzer audio: background music (Incompetech MP3s) and sound effects (CC0 files in
+   assets/sfx, with a synthesized fallback for any effect that has no file). */
 (function () {
   'use strict';
 
@@ -10,6 +11,8 @@
   function savePrefs() { try { localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); } catch (e) { /* storage blocked */ } }
 
   const MUSIC_VOL = 0.45;
+  // Resolved against this script so the preview page in tools/ finds the same files.
+  const SFX_DIR = new URL('../assets/sfx/', document.currentScript ? document.currentScript.src : location.href).href;
   let ctx = null, master, musicBus, sfxBus, noiseBuf;
 
   function init() {
@@ -280,14 +283,50 @@
       noise({ t: t + tr * 3 + 0.95, dur: 1.8, vol: 0.15, ftype: 'highpass', freq: 5000 });
       snare(t + tr * 3, sfxBus, 0.3);
     },
+    win(t) { SFX.fanfare(t); },
     streak(t) {
       [79, 83, 86, 91].forEach((n, i) => tone({ type: 'triangle', freq: mtof(n), t: t + i * 0.05, dur: 0.15, vol: 0.12, pluck: true }));
     }
   };
 
+  /* ---------- sound effect files ----------
+     Effect name -> file in assets/sfx/. To change a sound, replace the file (keep the name).
+     An effect missing from this list (or whose file fails to load) uses the synthesized version above. */
+  const SFX_FILES = {
+    click: 'click.mp3', join: 'join.mp3', pop: 'pop.mp3', submit: 'submit.mp3',
+    count: 'count.mp3', go: 'go.mp3', whoosh: 'whoosh.mp3', tickUrgent: 'tick-urgent.mp3',
+    correct: 'correct.mp3', wrong: 'wrong.mp3', streak: 'streak.mp3', ding: 'ding.mp3',
+    drumroll: 'drumroll.mp3', hit: 'hit.mp3', fanfare: 'fanfare.mp3', win: 'win.mp3'
+  };
+  const PITCH_JITTER = { join: 0.12, click: 0.05, pop: 0.06 }; // so repeated sounds don't feel robotic
+  const sfxData = {};   // name -> AudioBuffer | 'failed' (absent while loading)
+  // Download and decode straight away. An OfflineAudioContext can decode before any user gesture,
+  // and the AudioBuffers it makes play fine in the real context later.
+  const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+  const decoder = OAC ? new OAC(1, 1, 44100) : null;
+  Object.entries(SFX_FILES).forEach(([name, file]) => {
+    if (!decoder) { sfxData[name] = 'failed'; return; }
+    fetch(SFX_DIR + file)
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+      .then(buf => decoder.decodeAudioData(buf))
+      .then(b => { sfxData[name] = b; })
+      .catch(() => { sfxData[name] = 'failed'; });
+  });
+
   function sfx(name, arg) {
-    if (!init() || !SFX[name]) return;
-    SFX[name](ctx.currentTime + 0.01, arg);
+    if (!init()) return;
+    const d = sfxData[name];
+    if (d instanceof AudioBuffer) {
+      const src = ctx.createBufferSource();
+      src.buffer = d;
+      const j = PITCH_JITTER[name] || 0;
+      src.playbackRate.value = 1 + (Math.random() * 2 - 1) * j;
+      src.connect(sfxBus);
+      src.start(ctx.currentTime + 0.005);
+      return;
+    }
+    if (name in SFX_FILES && d !== 'failed') return;   // file still loading: stay quiet rather than mix styles
+    if (SFX[name]) SFX[name](ctx.currentTime + 0.01, arg);
   }
 
   function setMusic(on) {

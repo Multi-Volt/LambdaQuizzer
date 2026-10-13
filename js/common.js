@@ -124,5 +124,25 @@
     return wrap;
   }
 
-  window.LQ = { PEER_PREFIX, PEER_OPTS, $, $$, esc, randomId, randomPin, SYMBOLS, SYMBOL_NAMES, sym, styleIdx, ordinal, fmt, download, store, confetti, audioToggles };
+  // Sets el's text and nudges it so the visible glyphs (not the font's line box) sit dead centre.
+  // Digits like "1" are lopsided in their advance box, and fonts reserve more room above than below.
+  const inkCtx = document.createElement('canvas').getContext('2d');
+  function centerText(el, text) {
+    el.textContent = text;
+    const place = () => {
+      const cs = getComputedStyle(el);
+      inkCtx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+      const m = inkCtx.measureText(String(text));
+      const lineH = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize);
+      const baseline = (lineH - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxAscent;
+      const inkMidY = baseline - (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2;
+      const inkMidX = (m.actualBoundingBoxRight - m.actualBoundingBoxLeft) / 2;
+      el.style.left = (m.width / 2 - inkMidX).toFixed(2) + 'px';
+      el.style.top = (lineH / 2 - inkMidY).toFixed(2) + 'px';
+    };
+    place();
+    if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(place);
+  }
+
+  window.LQ = { PEER_PREFIX, centerText, PEER_OPTS, $, $$, esc, randomId, randomPin, SYMBOLS, SYMBOL_NAMES, sym, styleIdx, ordinal, fmt, download, store, confetti, audioToggles };
 })();
