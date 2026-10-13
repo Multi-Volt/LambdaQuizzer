@@ -28,8 +28,8 @@
     const USES = {
       click: 'Buttons', join: 'Player joins the lobby', pop: 'Host kicks a player', submit: 'Player locks in an answer',
       whoosh: 'Get ready / scoreboard', count: 'Get-ready countdown', go: 'Question appears', tickUrgent: 'Last 5 seconds',
-      correct: 'Player was right', wrong: 'Player was wrong', streak: 'Answer streak of 3+', drumroll: 'Before the podium',
-      hit: '3rd and 2nd place reveal', fanfare: 'Winner reveal (big screen)', win: 'Top 3 finish (phones)', ding: '4th place and below (phones)'
+      correct: 'Player was right', wrong: 'Player was wrong', streak: 'Answer streak of 3+', drumroll: 'Podium (under 3rd and 2nd)',
+      hit: '3rd and 2nd place reveal', fanfare: 'Winner reveal, 1 of 4 (big screen)', win: 'Top 3 finish, 1 of 3 (phones)', ding: '4th place and below (phones)'
     };
     document.getElementById('grid').innerHTML = Object.entries(USES).map(([k, v]) => `<button data-k="${k}"><b>${k}</b><small>${v}</small></button>`).join('');
     document.getElementById('grid').onclick = e => { const b = e.target.closest('button'); if (b) LQAudio.sfx(b.dataset.k); };

@@ -290,35 +290,40 @@
   };
 
   /* ---------- sound effect files ----------
-     Effect name -> file in assets/sfx/. To change a sound, replace the file (keep the name).
+     Effect name -> file(s) in assets/sfx/. To change a sound, replace the file (keep the name).
+     With a list, a random one plays each time.
      An effect missing from this list (or whose file fails to load) uses the synthesized version above. */
   const SFX_FILES = {
     click: 'click.mp3', join: 'join.mp3', pop: 'pop.mp3', submit: 'submit.mp3',
     count: 'count.mp3', go: 'go.mp3', whoosh: 'whoosh.mp3', tickUrgent: 'tick-urgent.mp3',
     correct: 'correct.mp3', wrong: 'wrong.mp3', streak: 'streak.mp3', ding: 'ding.mp3',
-    drumroll: 'drumroll.mp3', hit: 'hit.mp3', fanfare: 'fanfare.mp3', win: 'win.mp3'
+    drumroll: 'drumroll.mp3', hit: 'hit.mp3',
+    fanfare: ['fanfare-1.mp3', 'fanfare-2.mp3', 'fanfare-3.mp3', 'fanfare-4.mp3'],
+    win: ['win-1.mp3', 'win-2.mp3', 'win-3.mp3']
   };
   const PITCH_JITTER = { join: 0.12, click: 0.05, pop: 0.06 }; // so repeated sounds don't feel robotic
-  const sfxData = {};   // name -> AudioBuffer | 'failed' (absent while loading)
+  const sfxData = {};   // name -> [AudioBuffer, ...] | 'failed' (absent while loading)
   // Download and decode straight away. An OfflineAudioContext can decode before any user gesture,
   // and the AudioBuffers it makes play fine in the real context later.
   const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
   const decoder = OAC ? new OAC(1, 1, 44100) : null;
-  Object.entries(SFX_FILES).forEach(([name, file]) => {
+  Object.entries(SFX_FILES).forEach(([name, files]) => {
     if (!decoder) { sfxData[name] = 'failed'; return; }
-    fetch(SFX_DIR + file)
+    Promise.allSettled([].concat(files).map(file => fetch(SFX_DIR + file)
       .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
-      .then(buf => decoder.decodeAudioData(buf))
-      .then(b => { sfxData[name] = b; })
-      .catch(() => { sfxData[name] = 'failed'; });
+      .then(buf => decoder.decodeAudioData(buf))))
+      .then(rs => {
+        const ok = rs.filter(r => r.status === 'fulfilled').map(r => r.value);
+        sfxData[name] = ok.length ? ok : 'failed';
+      });
   });
 
   function sfx(name, arg) {
     if (!init()) return;
     const d = sfxData[name];
-    if (d instanceof AudioBuffer) {
+    if (Array.isArray(d)) {
       const src = ctx.createBufferSource();
-      src.buffer = d;
+      src.buffer = d[Math.floor(Math.random() * d.length)];
       const j = PITCH_JITTER[name] || 0;
       src.playbackRate.value = 1 + (Math.random() * 2 - 1) * j;
       src.connect(sfxBus);

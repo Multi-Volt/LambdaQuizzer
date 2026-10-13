@@ -55,6 +55,27 @@
           q('What gas do plants absorb from the air for photosynthesis?', ['Oxygen', 'Carbon dioxide', 'Nitrogen', 'Hydrogen'], [1]),
           q('How many sides does a hexagon have?', ['Five', 'Six', 'Seven', 'Eight'], [1], { time: 10, points: 2 })
         ]
+      },
+      {
+        id: LQ.randomId(10), title: 'PS1 Video Game Trivia', description: 'Memory cards at the ready: sixteen questions on the original PlayStation.', updated: Date.now(),
+        questions: [
+          q('In what year did the PlayStation launch in Japan?', ['1992', '1994', '1996', '1998'], [1]),
+          tf('The PlayStation grew out of a cancelled CD add-on Sony was building with Nintendo.', true),
+          q('Which studio created Crash Bandicoot?', ['Insomniac Games', 'Naughty Dog', 'Sucker Punch', 'Polyphony Digital'], [1]),
+          q('Which studio made Spyro the Dragon?', ['Insomniac Games', 'Rare', 'Naughty Dog', 'Traveller\'s Tales'], [0]),
+          q('What is the best-selling PS1 game of all time?', ['Final Fantasy VII', 'Crash Bandicoot', 'Gran Turismo', 'Tekken 3'], [2], { points: 2 }),
+          q('Which of these is NOT a PlayStation face button?', ['Triangle', 'Circle', 'Star', 'Square'], [2], { time: 10 }),
+          tf('The original PS1 controller had two analog sticks.', false),
+          q('Who is the main villain of Final Fantasy VII?', ['Kefka', 'Sephiroth', 'Seymour', 'Ultimecia'], [1]),
+          q('Which Final Fantasy VII character dies at the end of disc one?', ['Tifa', 'Barret', 'Aerith', 'Yuffie'], [2]),
+          q('What is the codename of Metal Gear Solid\'s hero?', ['Solid Snake', 'Big Boss', 'Raiden', 'Revolver Ocelot'], [0]),
+          q('Resident Evil\'s mansion sits outside which fictional city?', ['Silent Hill', 'Raccoon City', 'Midgar', 'Liberty City'], [1]),
+          q('Who do you play as in the first Silent Hill?', ['James Sunderland', 'Leon Kennedy', 'Harry Mason', 'Heather Mason'], [2]),
+          q('Who do you play as in Castlevania: Symphony of the Night?', ['Simon Belmont', 'Alucard', 'Richter Belmont', 'Dracula'], [1]),
+          q('PaRappa the Rapper is what kind of game?', ['Racing', 'Fighting', 'Rhythm', 'Puzzle'], [2], { time: 10 }),
+          q('How many blocks did a standard PS1 memory card hold?', ['8', '10', '15', '30'], [2]),
+          tf('The original PlayStation sold over 100 million consoles.', true, { points: 2 })
+        ]
       }
     ];
   }

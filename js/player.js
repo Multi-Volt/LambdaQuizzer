@@ -244,7 +244,7 @@
       ${kind === 'right' ? `<p class="big-sub">${esc(quip('right', 'Nice work.'))}</p>` : ''}
       <p class="place">${place}</p>
     </div>`);
-    if (kind === 'right') { A.sfx('correct'); if (m.streak >= 3) setTimeout(() => A.sfx('streak'), 600); }
+    if (kind === 'right') { A.sfx('correct'); if (m.streak >= 3) setTimeout(() => A.sfx('streak'), 1500); }
     else A.sfx('wrong');
     if (navigator.vibrate) navigator.vibrate(kind === 'right' ? [40, 60, 40] : 200);
   }

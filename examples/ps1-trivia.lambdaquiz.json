@@ -1,0 +1,280 @@
+{
+  "id": "jjg0sa8dzp",
+  "title": "PS1 Video Game Trivia",
+  "description": "Memory cards at the ready: sixteen questions on the original PlayStation.",
+  "updated": 1791863760989,
+  "questions": [
+    {
+      "id": "hcsdgen6",
+      "type": "quiz",
+      "text": "In what year did the PlayStation launch in Japan?",
+      "image": "",
+      "time": 20,
+      "points": 1,
+      "answers": [
+        "1992",
+        "1994",
+        "1996",
+        "1998"
+      ],
+      "correct": [
+        1
+      ]
+    },
+    {
+      "id": "cin2uh6i",
+      "type": "tf",
+      "text": "The PlayStation grew out of a cancelled CD add-on Sony was building with Nintendo.",
+      "image": "",
+      "time": 10,
+      "points": 1,
+      "answers": [
+        "True",
+        "False",
+        "",
+        ""
+      ],
+      "correct": [
+        0
+      ]
+    },
+    {
+      "id": "qqkd4qoq",
+      "type": "quiz",
+      "text": "Which studio created Crash Bandicoot?",
+      "image": "",
+      "time": 20,
+      "points": 1,
+      "answers": [
+        "Insomniac Games",
+        "Naughty Dog",
+        "Sucker Punch",
+        "Polyphony Digital"
+      ],
+      "correct": [
+        1
+      ]
+    },
+    {
+      "id": "uvavgw0w",
+      "type": "quiz",
+      "text": "Which studio made Spyro the Dragon?",
+      "image": "",
+      "time": 20,
+      "points": 1,
+      "answers": [
+        "Insomniac Games",
+        "Rare",
+        "Naughty Dog",
+        "Traveller's Tales"
+      ],
+      "correct": [
+        0
+      ]
+    },
+    {
+      "id": "s2qrcx01",
+      "type": "quiz",
+      "text": "What is the best-selling PS1 game of all time?",
+      "image": "",
+      "time": 20,
+      "points": 2,
+      "answers": [
+        "Final Fantasy VII",
+        "Crash Bandicoot",
+        "Gran Turismo",
+        "Tekken 3"
+      ],
+      "correct": [
+        2
+      ]
+    },
+    {
+      "id": "52pnbijt",
+      "type": "quiz",
+      "text": "Which of these is NOT a PlayStation face button?",
+      "image": "",
+      "time": 10,
+      "points": 1,
+      "answers": [
+        "Triangle",
+        "Circle",
+        "Star",
+        "Square"
+      ],
+      "correct": [
+        2
+      ]
+    },
+    {
+      "id": "vc2bz03o",
+      "type": "tf",
+      "text": "The original PS1 controller had two analog sticks.",
+      "image": "",
+      "time": 10,
+      "points": 1,
+      "answers": [
+        "True",
+        "False",
+        "",
+        ""
+      ],
+      "correct": [
+        1
+      ]
+    },
+    {
+      "id": "n62x2n6o",
+      "type": "quiz",
+      "text": "Who is the main villain of Final Fantasy VII?",
+      "image": "",
+      "time": 20,
+      "points": 1,
+      "answers": [
+        "Kefka",
+        "Sephiroth",
+        "Seymour",
+        "Ultimecia"
+      ],
+      "correct": [
+        1
+      ]
+    },
+    {
+      "id": "9z1wa9kl",
+      "type": "quiz",
+      "text": "Which Final Fantasy VII character dies at the end of disc one?",
+      "image": "",
+      "time": 20,
+      "points": 1,
+      "answers": [
+        "Tifa",
+        "Barret",
+        "Aerith",
+        "Yuffie"
+      ],
+      "correct": [
+        2
+      ]
+    },
+    {
+      "id": "s1tdpf2s",
+      "type": "quiz",
+      "text": "What is the codename of Metal Gear Solid's hero?",
+      "image": "",
+      "time": 20,
+      "points": 1,
+      "answers": [
+        "Solid Snake",
+        "Big Boss",
+        "Raiden",
+        "Revolver Ocelot"
+      ],
+      "correct": [
+        0
+      ]
+    },
+    {
+      "id": "gb2vc99x",
+      "type": "quiz",
+      "text": "Resident Evil's mansion sits outside which fictional city?",
+      "image": "",
+      "time": 20,
+      "points": 1,
+      "answers": [
+        "Silent Hill",
+        "Raccoon City",
+        "Midgar",
+        "Liberty City"
+      ],
+      "correct": [
+        1
+      ]
+    },
+    {
+      "id": "j1lwm3o9",
+      "type": "quiz",
+      "text": "Who do you play as in the first Silent Hill?",
+      "image": "",
+      "time": 20,
+      "points": 1,
+      "answers": [
+        "James Sunderland",
+        "Leon Kennedy",
+        "Harry Mason",
+        "Heather Mason"
+      ],
+      "correct": [
+        2
+      ]
+    },
+    {
+      "id": "68ubfe8d",
+      "type": "quiz",
+      "text": "Who do you play as in Castlevania: Symphony of the Night?",
+      "image": "",
+      "time": 20,
+      "points": 1,
+      "answers": [
+        "Simon Belmont",
+        "Alucard",
+        "Richter Belmont",
+        "Dracula"
+      ],
+      "correct": [
+        1
+      ]
+    },
+    {
+      "id": "8dh7e3q4",
+      "type": "quiz",
+      "text": "PaRappa the Rapper is what kind of game?",
+      "image": "",
+      "time": 10,
+      "points": 1,
+      "answers": [
+        "Racing",
+        "Fighting",
+        "Rhythm",
+        "Puzzle"
+      ],
+      "correct": [
+        2
+      ]
+    },
+    {
+      "id": "1s3a3s9y",
+      "type": "quiz",
+      "text": "How many blocks did a standard PS1 memory card hold?",
+      "image": "",
+      "time": 20,
+      "points": 1,
+      "answers": [
+        "8",
+        "10",
+        "15",
+        "30"
+      ],
+      "correct": [
+        2
+      ]
+    },
+    {
+      "id": "xia5trn5",
+      "type": "tf",
+      "text": "The original PlayStation sold over 100 million consoles.",
+      "image": "",
+      "time": 10,
+      "points": 2,
+      "answers": [
+        "True",
+        "False",
+        "",
+        ""
+      ],
+      "correct": [
+        0
+      ]
+    }
+  ]
+}
