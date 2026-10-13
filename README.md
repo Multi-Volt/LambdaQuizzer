@@ -1,6 +1,6 @@
 # LambdaQuizzer λ
 
-A free, Kahoot-style live quiz game for college classes and review sessions. It is a static site
+A free live quiz game for college classes and review sessions. It is a static site
 (GitHub Pages), with no server, no accounts, and no database.
 
 - **Make quizzes** in the browser: multiple choice (2 to 4 answers, one or more correct) or
@@ -8,13 +8,15 @@ A free, Kahoot-style live quiz game for college classes and review sessions. It 
   optional image per question. Quizzes autosave in your browser; export and import them as JSON.
 - **Players join from their phones** by scanning the QR code on the big screen or typing the
   6-digit game PIN at the site's home page.
-- **Kahoot-style play:** get-ready countdown, question reading time, colored shape buttons on
-  phones, answer chart, scoreboard after every question, answer streak bonuses, and a podium with
-  confetti at the end.
-- **Original music and sound effects.** A bouncy lobby loop and a tense countdown loop are written
-  as MIDI note sequences and synthesized live with the Web Audio API (`js/audio.js`), so there are no
-  audio files. There are effects for players joining, ticking clock, gong, correct, wrong,
-  drumroll and fanfare. Music and sound each have a mute button.
+- **Game-show play:** get-ready countdown, question reading time, big Greek-letter answer
+  buttons on phones (α β γ δ, or ⊤ / ⊥ for true/false), an answer chart, a scoreboard after
+  every question, hot-streak bonuses, and a podium with confetti at the end.
+- **Music and sound effects.** Background music is by Kevin MacLeod (see Credits). The sound
+  effects (players joining, ticking clock, gong, correct, wrong, drumroll, fanfare) are synthesized
+  live with the Web Audio API (`js/audio.js`), so they need no audio files. Music and sound each
+  have a mute button.
+- **Editable flavor text.** The quips students see after answering, on the scoreboard and at the
+  end are all in `js/messages.js`. Add, remove or rewrite lines; one is picked at random each time.
 - **Host tools:** remove a player by clicking their name in the lobby, lock the lobby, skip a
   question, and download a CSV of results.
 - Players who refresh or lose Wi-Fi can rejoin and keep their score.
@@ -37,8 +39,10 @@ host's peer name); game traffic then goes peer-to-peer, through PeerJS's public 
 network blocks direct connections. Some locked-down campus networks block WebRTC entirely; if
 students can't join, have them switch to mobile data.
 
+To swap music, drop MP3s in `assets/music/` and change the `TRACKS` list in `js/audio.js`.
+
 Libraries are vendored in `vendor/` (PeerJS 1.5.4, qrcode-generator 1.4.4). The font is
-Montserrat from Google Fonts.
+Space Grotesk from Google Fonts.
 
 ## Deploying to GitHub Pages
 
@@ -67,3 +71,15 @@ the podium, and the CSV download.
 
     pip install playwright && playwright install chromium
     python tests/e2e.py
+
+## Credits
+
+Music by Kevin MacLeod ([incompetech.com](https://incompetech.com)):
+
+- Lobby: "Monkeys Spinning Monkeys"
+- Questions: "Ouroboros"
+- Scoreboard and results: "Itty Bitty 8 Bit"
+
+Used under a license from incompetech. Without a paid license these tracks are available under
+[Creative Commons: By Attribution 4.0](https://creativecommons.org/licenses/by/4.0/), which needs
+this credit.

@@ -8,11 +8,10 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="host">
-  <div class="bg-shapes" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
 
   <!-- Quiz library -->
   <section id="library" class="view">
@@ -67,8 +66,10 @@
   <!-- Live game -->
   <section id="game" class="view" hidden>
     <header class="gamebar">
-      <div class="brand small"><img src="assets/logo.svg" alt=""><span>LambdaQuizzer</span></div>
-      <div id="gbPin" class="gb-pin" hidden></div>
+      <div class="gb-left">
+        <div class="brand small"><img src="assets/logo.svg" alt=""><span>LambdaQuizzer</span></div>
+        <div id="gbPin" class="gb-pin" hidden></div>
+      </div>
       <div id="gbInfo" class="gb-info"></div>
       <div class="gb-actions">
         <span id="gbToggles"></span>

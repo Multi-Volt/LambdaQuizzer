@@ -1,5 +1,5 @@
 """End-to-end test: a host and three phone players play a full game over the real PeerJS
-broker. Checks the join flow (QR link and PIN), duplicate nicknames, kicking, answering,
+broker. Checks the music files load, the join flow (QR link and PIN), duplicate nicknames, kicking, answering,
 scoring, a refresh mid-game (rejoin keeps the score), and the podium. Screenshots go to tests/out.
 
     pip install playwright && playwright install chromium
@@ -70,6 +70,8 @@ def run(browser):
     hctx.add_init_script(f"localStorage.setItem('lq-quizzes-v1', JSON.stringify([{json.dumps(QUIZ)}]))")
     host = hctx.new_page()
     watch(host, 'host')
+    music = {}
+    host.on('response', lambda r: '/assets/music/' in r.url and music.__setitem__(r.url.rsplit('/', 1)[1], r.status))
     host.goto(BASE + 'host.html')
     host.screenshot(path=f'{OUT}/library.png')
     host.click('.quiz-card [data-act=edit]')
@@ -80,6 +82,9 @@ def run(browser):
     pin = host.inner_text('.pin-box strong').replace(' ', '')
     check(len(pin) == 6, f'host got PIN {pin}')
     qr_href = host.get_attribute('.qr', 'href')
+    host.wait_for_function("LQAudio.playing === 'lobby'")
+    host.wait_for_timeout(1500)
+    check(music.get('monkeys-spinning-monkeys.mp3') in (200, 206), 'lobby music file loads')
     check(qr_href.endswith('index.html?pin=' + pin), 'QR link points at the join page with the PIN')
 
     players = {}
@@ -176,6 +181,7 @@ def run(browser):
                 host.screenshot(path=f'{OUT}/scoreboard.png')
             host.click('#nextBtn')
 
+    check(all(music.get(f) in (200, 206) for f in ('ouroboros.mp3', 'itty-bitty-8-bit.mp3')), 'question and results music files load')
     host.wait_for_selector('#pod1.show', timeout=10000)
     host.wait_for_timeout(1200)
     host.screenshot(path=f'{OUT}/podium.png')

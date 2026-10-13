@@ -1,7 +1,7 @@
 /* Quiz library and editor (host page). */
 (function () {
   'use strict';
-  const { $, $$, esc, SHAPES, styleIdx } = LQ;
+  const { $, $$, esc, sym, styleIdx } = LQ;
   const Q = LQQuizzes;
 
   function showView(id) {
@@ -152,7 +152,7 @@
           const st = styleIdx(isTf, s);
           const on = x.correct.includes(s);
           return `<div class="ans-edit c${st}">
-            <span class="shape">${SHAPES[st]}</span>
+            ${sym(isTf, s)}
             ${isTf ? `<span class="ans-fixed">${esc(x.answers[s])}</span>`
                    : `<input data-f="ans" data-s="${s}" type="text" maxlength="${Q.LIMITS.answer}" placeholder="Add answer ${s + 1}${s >= 2 ? ' (optional)' : ''}" value="${esc(x.answers[s])}">`}
             <button type="button" class="check${on ? ' on' : ''}" data-act="correct" data-s="${s}" aria-pressed="${on}" title="Mark as correct" aria-label="Answer ${s + 1} is correct">✓</button>

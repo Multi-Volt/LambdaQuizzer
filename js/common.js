@@ -25,16 +25,13 @@
     return String(100000 + (a[0] % 900000));
   }
 
-  // Answer slots: red triangle, blue diamond, yellow circle, green square.
-  const SHAPES = [
-    '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4 29 27H3Z"/></svg>',
-    '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 30 16 16 30 2 16Z"/></svg>',
-    '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13"/></svg>',
-    '<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="4" width="24" height="24" rx="2"/></svg>'
-  ];
-  const SHAPE_NAMES = ['triangle', 'diamond', 'circle', 'square'];
-  // True/False questions use blue for True and red for False.
-  function styleIdx(isTf, slot) { return isTf ? [1, 0][slot] : slot; }
+  // Answer slots are Greek letters: indigo α, teal β, orange γ, magenta δ.
+  // True/False uses the logic symbols ⊤ (teal) and ⊥ (magenta).
+  const SYMBOLS = ['α', 'β', 'γ', 'δ'];
+  const SYMBOL_NAMES = ['Alpha', 'Beta', 'Gamma', 'Delta'];
+  const TF_SYMBOLS = ['⊤', '⊥'];
+  function styleIdx(isTf, slot) { return isTf ? [1, 3][slot] : slot; }
+  function sym(isTf, slot) { return `<span class="sym" aria-hidden="true">${isTf ? TF_SYMBOLS[slot] : SYMBOLS[slot]}</span>`; }
 
   function ordinal(n) {
     const s = ['th', 'st', 'nd', 'rd'], v = n % 100;
@@ -70,7 +67,7 @@
     const dpr = window.devicePixelRatio || 1;
     const resize = () => { cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; };
     resize();
-    const colors = ['#e21b3c', '#1368ce', '#ffa602', '#26890c', '#ffffff', '#b98cff'];
+    const colors = ['#6d6af0', '#12a594', '#f07a3a', '#d6409f', '#ffffff', '#ffd166'];
     const parts = Array.from({ length: 180 }, () => ({
       x: Math.random() * cv.width, y: -Math.random() * cv.height * 0.6,
       vx: (Math.random() - 0.5) * 3 * dpr, vy: (2 + Math.random() * 4) * dpr,
@@ -127,5 +124,5 @@
     return wrap;
   }
 
-  window.LQ = { PEER_PREFIX, PEER_OPTS, $, $$, esc, randomId, randomPin, SHAPES, SHAPE_NAMES, styleIdx, ordinal, fmt, download, store, confetti, audioToggles };
+  window.LQ = { PEER_PREFIX, PEER_OPTS, $, $$, esc, randomId, randomPin, SYMBOLS, SYMBOL_NAMES, sym, styleIdx, ordinal, fmt, download, store, confetti, audioToggles };
 })();

@@ -1,7 +1,7 @@
 /* Player (phone) side: enter PIN, pick a nickname, tap answers. */
 (function () {
   'use strict';
-  const { $, esc, SHAPES, styleIdx, ordinal, fmt } = LQ;
+  const { $, esc, sym, styleIdx, ordinal, fmt } = LQ;
   const A = LQAudio;
   const ss = LQ.store('session');
 
@@ -9,12 +9,9 @@
   const S = { pin: '', peer: null, conn: null, token: '', name: '', score: 0, q: -1, answered: false, phase: 'pin', timeout: null, total: 0 };
 
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
-  const QUIPS = {
-    locked: ['Locked in. No take-backs.', 'Were you tooooo fast?', 'Submitted before the deadline, for once.', 'Bold choice. Let’s see.', 'Answer sent. Now act natural.', 'Confidence: 100%. Accuracy: pending.'],
-    right: ['Big brain energy.', 'Dean’s list material.', 'Your professor would be proud.', 'Absolutely cooking.', 'That’s going on the résumé.'],
-    wrong: ['That’s curve-able.', 'Office hours exist for a reason.', 'Shake it off. Next one’s yours.', 'Even Turing had off days.', 'Bold. Wrong, but bold.'],
-    late: ['Too slow… like campus Wi-Fi.', 'Snoozed through that one.', 'The answer was in the syllabus.']
-  };
+  // Flavor text lives in js/messages.js so it is easy to edit.
+  const MSG = window.LQ_MESSAGES || {};
+  const quip = (key, fallback) => { const list = Array.isArray(MSG[key]) && MSG[key].length ? MSG[key] : [fallback]; return pick(list); };
 
   $('#corner').appendChild(LQ.audioToggles({ music: false }));
 
@@ -126,7 +123,7 @@
       <form id="nameForm" class="card join-box" autocomplete="off">
         <label class="sr-only" for="nameIn">Nickname</label>
         <input id="nameIn" class="big-input" maxlength="15" placeholder="Nickname" value="${esc(S.pendingName || '')}" autocapitalize="words" spellcheck="false">
-        <button class="btn dark big block" type="submit">OK, go!</button>
+        <button class="btn dark big block" type="submit">Join</button>
         ${error ? `<p class="form-error" role="alert">${esc(error)}</p>` : ''}
       </form>
       <p class="host-link">Game PIN ${esc(S.pin)} · <a href="index.html">change</a></p>
@@ -177,8 +174,8 @@
     S.phase = 'lobby';
     A.sfx('join');
     screen('lobby', `<div class="center-msg">
-      <h1 class="youre-in">You’re in!</h1>
-      <p class="big-sub">See your nickname on screen?</p>
+      <h1 class="youre-in">Joined</h1>
+      <p class="big-sub">Look for your name on the big screen.</p>
       <div class="name-pill">${esc(S.name)}</div>
       ${S.quiz ? `<p class="muted">${esc(S.quiz)}</p>` : ''}
     </div>`);
@@ -189,8 +186,8 @@
     S.total = m.total;
     screen('wait', `<div class="center-msg">
       <p class="q-of">Question ${m.q + 1} of ${m.total}</p>
-      <h1 class="youre-in">Get ready!</h1>
-      <div class="loader-shapes">${[0, 1, 2, 3].map(i => `<span class="c${i}">${SHAPES[i]}</span>`).join('')}</div>
+      <h1 class="youre-in">Eyes on the screen</h1>
+      <div class="loader-shapes">${[0, 1, 2, 3].map(i => `<span class="c${i}">${sym(false, i)}</span>`).join('')}</div>
     </div>`);
   }
 
@@ -204,8 +201,8 @@
       <div class="answer-grid n${slots.length}">
         ${slots.map(s => {
           const st = styleIdx(m.tf, s);
-          return `<button type="button" class="answer-btn c${st}" data-slot="${s}" aria-label="${m.tf ? (s === 0 ? 'True' : 'False') : LQ.SHAPE_NAMES[st]}">
-            <span class="shape">${SHAPES[st]}</span>${m.tf ? `<span class="tf-label">${s === 0 ? 'True' : 'False'}</span>` : ''}</button>`;
+          return `<button type="button" class="answer-btn c${st}" data-slot="${s}" aria-label="${m.tf ? (s === 0 ? 'True' : 'False') : LQ.SYMBOL_NAMES[s]}">
+            ${sym(m.tf, s)}${m.tf ? `<span class="tf-label">${s === 0 ? 'True' : 'False'}</span>` : ''}</button>`;
         }).join('')}
       </div>
     </div>`);
@@ -225,7 +222,7 @@
     S.answered = true;
     screen('locked', `<div class="center-msg">
       <div class="spinner"></div>
-      <h1 class="youre-in">${esc(pick(QUIPS.locked))}</h1>
+      <h1 class="youre-in">${esc(quip('locked', 'Answer locked in.'))}</h1>
     </div>`);
   }
 
@@ -242,9 +239,9 @@
     screen(kind, `<div class="center-msg result">
       <h1 class="result-title">${title}</h1>
       <div class="result-icon">${icon}</div>
-      ${kind === 'right' && m.streak >= 2 ? `<div class="streak-pill">Answer streak <b>${m.streak}</b> 🔥</div>` : ''}
-      ${kind === 'right' ? `<div class="points-pill">+ ${fmt(m.pts)}</div>` : `<p class="big-sub">${esc(pick(QUIPS[kind]))}</p>`}
-      ${kind === 'right' ? `<p class="big-sub">${esc(pick(QUIPS.right))}</p>` : ''}
+      ${kind === 'right' && m.streak >= 2 ? `<div class="streak-pill">Hot streak <b>×${m.streak}</b></div>` : ''}
+      ${kind === 'right' ? `<div class="points-pill">+ ${fmt(m.pts)}</div>` : `<p class="big-sub">${esc(quip(kind, kind === 'late' ? 'Out of time.' : 'Not quite.'))}</p>`}
+      ${kind === 'right' ? `<p class="big-sub">${esc(quip('right', 'Nice work.'))}</p>` : ''}
       <p class="place">${place}</p>
     </div>`);
     if (kind === 'right') { A.sfx('correct'); if (m.streak >= 3) setTimeout(() => A.sfx('streak'), 600); }
@@ -259,7 +256,7 @@
     screen('wait', `<div class="center-msg">
       <p class="q-of">Scoreboard</p>
       <div class="rank-big">${ordinal(m.rank)}</div>
-      <p class="big-sub">${m.rank <= 3 ? 'You’re on the podium… for now.' : 'Plenty of time to climb.'}</p>
+      <p class="big-sub">${esc(m.rank <= 3 ? quip('scoreboardTop3', 'Top three!') : quip('scoreboardRest', 'Keep going.'))}</p>
       <p class="muted">${fmt(m.score)} points · ${m.total} players</p>
     </div>`);
   }
@@ -274,7 +271,7 @@
       ${medal ? `<div class="medal-big">${medal}</div>` : ''}
       <div class="rank-big">${ordinal(m.rank)} place</div>
       <p class="big-sub">${fmt(m.score)} points · ${m.correct} of ${m.questions} correct</p>
-      <p class="muted">${m.rank === 1 ? 'Absolute legend.' : m.rank <= 3 ? 'Podium finish!' : 'GG. Run it back next class.'}</p>
+      <p class="muted">${esc(m.rank === 1 ? quip('endFirst', 'Winner!') : m.rank <= 3 ? quip('endPodium', 'Podium finish!') : quip('endRest', 'Good game.'))}</p>
       <p><a class="btn dark big" href="index.html">Play again</a></p>
     </div>`);
     // Wait for the podium reveal on the big screen before celebrating.

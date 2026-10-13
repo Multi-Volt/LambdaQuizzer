@@ -1,7 +1,7 @@
 /* Live game host. The host's browser is the game server: players connect to it over WebRTC (PeerJS). */
 (function () {
   'use strict';
-  const { $, esc, SHAPES, styleIdx, ordinal, fmt } = LQ;
+  const { $, esc, sym, styleIdx, ordinal, fmt } = LQ;
   const A = LQAudio;
 
   const MAX_PLAYERS = 250;
@@ -45,6 +45,7 @@
     $('#gbPin').hidden = true;
     $('#gbInfo').textContent = '';
     stage().innerHTML = '<div class="center-msg"><div class="spinner"></div><h2>Creating your game…</h2></div>';
+    A.preloadMusic();
     A.playMusic('lobby');
     createPeer(0);
   }
@@ -298,7 +299,7 @@
       const st = styleIdx(c.tf, s);
       const ok = c.correct.includes(s);
       const cls = reveal ? (ok ? ' right' : ' dim') : '';
-      return `<div class="tile c${st}${cls}"><span class="shape">${SHAPES[st]}</span><span class="tile-text">${esc(c.answers[s])}</span>${reveal && ok ? '<span class="tick">✓</span>' : ''}</div>`;
+      return `<div class="tile c${st}${cls}">${sym(c.tf, s)}<span class="tile-text">${esc(c.answers[s])}</span>${reveal && ok ? '<span class="tick">✓</span>' : ''}</div>`;
     }).join('')}</div>`;
   }
 
@@ -310,7 +311,7 @@
     stage().innerHTML = `<div class="answering">
       <div class="q-banner"><h1 class="q-text">${esc(c.text)}</h1></div>
       <div class="q-mid">
-        <div class="timer-circle"><span id="tLeft">${c.time}</span></div>
+        <div class="timer-ring" id="tRing" style="--p:1"><span id="tLeft">${c.time}</span></div>
         ${imageHtml(c) || '<div class="q-image placeholder"><img src="assets/logo.svg" alt=""></div>'}
         <div class="ans-count"><b id="aCount">0</b><span>Answers</span></div>
       </div>
@@ -325,9 +326,11 @@
       const sec = Math.max(0, Math.ceil(left));
       const el = $('#tLeft');
       if (el) el.textContent = sec;
+      const ring = $('#tRing');
+      if (ring) ring.style.setProperty('--p', Math.max(0, left / c.time).toFixed(3));
       if (sec !== G.lastSec) {
         G.lastSec = sec;
-        if (sec <= 5 && sec > 0) { A.sfx('tickUrgent'); el && el.parentNode.classList.add('urgent'); }
+        if (sec <= 5 && sec > 0) { A.sfx('tickUrgent'); const r = $('#tRing'); if (r) r.classList.add('urgent'); }
       }
       if (left <= 0) endQuestion();
     }, 100);
@@ -418,7 +421,7 @@
           return `<div class="bar-col c${st}${ok ? '' : ' dim'}">
             <div class="bar-n">${counts[s]}${ok ? ' <span class="tick">✓</span>' : ''}</div>
             <div class="bar" style="--h:${Math.round(counts[s] / max * 100)}%"></div>
-            <div class="bar-base"><span class="shape">${SHAPES[st]}</span></div>
+            <div class="bar-base">${sym(c.tf, s)}</div>
           </div>`;
         }).join('')}</div>
         <button class="btn primary big" id="nextBtn" type="button">${last ? 'Final results' : 'Next'}</button>
@@ -435,15 +438,15 @@
     const order = ranked();
     broadcast(p => ({ t: 'scoreboard', rank: order.indexOf(p) + 1, score: p.score, total: order.length }));
     A.sfx('whoosh');
-    A.playMusic('lobby');
+    A.playMusic('results');
     const top = order.slice(0, 5);
     const streaker = order.filter(p => p.streak >= 3).sort((a, b) => b.streak - a.streak)[0];
     stage().innerHTML = `<div class="scoreboard">
       <div class="sb-head"><h1>Scoreboard</h1><button class="btn primary big" id="nextBtn" type="button">Next</button></div>
       <ol class="sb-list">${top.map((p, i) => `<li style="animation-delay:${i * 90}ms">
-        <span class="sb-rank">${i + 1}</span><span class="sb-name">${esc(p.name)}${p.streak >= 3 ? ` <span class="streak" title="Answer streak">🔥${p.streak}</span>` : ''}</span><span class="sb-score">${fmt(p.score)}</span></li>`).join('')}
+        <span class="sb-rank">${i + 1}</span><span class="sb-name">${esc(p.name)}${p.streak >= 3 ? ` <span class="streak" title="Hot streak">×${p.streak}</span>` : ''}</span><span class="sb-score">${fmt(p.score)}</span></li>`).join('')}
       </ol>
-      ${streaker ? `<p class="sb-note">${esc(streaker.name)} is on a ${streaker.streak}-answer streak 🔥</p>` : ''}
+      ${streaker ? `<p class="sb-note">${esc(streaker.name)} is on a ${streaker.streak}-question hot streak</p>` : ''}
     </div>`;
     $('#nextBtn').onclick = nextQuestion;
     $('#nextBtn').focus();
@@ -490,7 +493,7 @@
       LQ.confetti(6000);
       $('#podActions').hidden = false;
     });
-    later(8000, () => A.playMusic('lobby'));
+    later(8000, () => A.playMusic('results'));
     $('#csvBtn').onclick = downloadCsv;
     $('#againBtn').onclick = () => { const q = G.quiz; if (confirm('Start a new game with a new PIN? Players will need to join again.')) start(q); };
     $('#doneBtn').onclick = () => { stop(); LQEditor.showLibrary(); };
