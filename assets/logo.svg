@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="LambdaQuizzer">
+  <circle cx="120" cy="120" r="118" fill="#000"/>
+  <g fill="none" stroke-width="7" stroke-linecap="round" transform="rotate(-135 120 120)">
+    <circle cx="120" cy="120" r="98" stroke="#e21b3c" stroke-dasharray="139.9 475.9" stroke-dashoffset="-7"/>
+    <circle cx="120" cy="120" r="98" stroke="#1368ce" stroke-dasharray="139.9 475.9" stroke-dashoffset="-160.9"/>
+    <circle cx="120" cy="120" r="98" stroke="#ffa602" stroke-dasharray="139.9 475.9" stroke-dashoffset="-314.9"/>
+    <circle cx="120" cy="120" r="98" stroke="#26890c" stroke-dasharray="139.9 475.9" stroke-dashoffset="-468.8"/>
+  </g>
+  <text x="120" y="122" fill="#fff" font-family="Georgia, 'Times New Roman', 'DejaVu Serif', serif" font-size="150" text-anchor="middle" dominant-baseline="central">λ</text>
+</svg>

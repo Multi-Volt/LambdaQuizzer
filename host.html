@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Host · LambdaQuizzer</title>
+  <meta name="description" content="Make quizzes and host live LambdaQuizzer games.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="host">
+  <div class="bg-shapes" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+  <!-- Quiz library -->
+  <section id="library" class="view">
+    <header class="topbar">
+      <a class="brand" href="index.html"><img src="assets/logo.svg" alt=""><span>LambdaQuizzer</span></a>
+      <div class="topbar-actions">
+        <a class="btn ghost" href="index.html">Join a game</a>
+      </div>
+    </header>
+    <main class="page">
+      <div class="page-head">
+        <div>
+          <h1>Your quizzes</h1>
+          <p class="sub">Quizzes are saved in this browser. Export them to back them up or share them with another host.</p>
+        </div>
+        <div class="row">
+          <label class="btn ghost" for="importFile">Import</label>
+          <input id="importFile" type="file" accept="application/json,.json" hidden>
+          <button id="newQuiz" class="btn primary" type="button">+ New quiz</button>
+        </div>
+      </div>
+      <div id="quizList" class="quiz-grid"></div>
+    </main>
+  </section>
+
+  <!-- Quiz editor -->
+  <section id="editor" class="view" hidden>
+    <header class="topbar">
+      <a class="brand" href="#" data-act="back"><img src="assets/logo.svg" alt=""><span>LambdaQuizzer</span></a>
+      <div class="topbar-actions">
+        <span id="saveState" class="save-state">Saved</span>
+        <button class="btn ghost" type="button" data-act="back">Done</button>
+        <button class="btn primary" type="button" data-act="host">Host this quiz</button>
+      </div>
+    </header>
+    <main class="page narrow">
+      <div class="card quiz-meta">
+        <label class="field">
+          <span>Quiz title</span>
+          <input id="qzTitle" type="text" maxlength="80" placeholder="e.g. CSE 2221 Midterm Review">
+        </label>
+        <label class="field">
+          <span>Description <em>(optional)</em></span>
+          <input id="qzDesc" type="text" maxlength="300" placeholder="What is this quiz about?">
+        </label>
+      </div>
+      <div id="qList"></div>
+      <button id="addQ" class="btn add-q" type="button">+ Add question</button>
+    </main>
+  </section>
+
+  <!-- Live game -->
+  <section id="game" class="view" hidden>
+    <header class="gamebar">
+      <div class="brand small"><img src="assets/logo.svg" alt=""><span>LambdaQuizzer</span></div>
+      <div id="gbPin" class="gb-pin" hidden></div>
+      <div id="gbInfo" class="gb-info"></div>
+      <div class="gb-actions">
+        <span id="gbToggles"></span>
+        <button id="endGame" class="btn ghost small" type="button">End</button>
+      </div>
+    </header>
+    <main id="stage" class="stage"></main>
+  </section>
+
+  <script src="vendor/peerjs.min.js"></script>
+  <script src="vendor/qrcode.min.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/quizzes.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/host.js"></script>
+</body>
+</html>
