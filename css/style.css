@@ -30,7 +30,7 @@
 * { box-sizing: border-box; }
 html, body { min-height: 100%; }
 /* Plain gradient, on a fixed layer so it never repeats or jumps on mobile. */
-body::before { content: ''; position: fixed; inset: 0; z-index: -1; background: linear-gradient(155deg, #221c5c 0%, #10132a 50%, #0a2a30 100%); }
+body::before { content: ''; position: fixed; inset: 0; z-index: -1; background: var(--bg-grad, linear-gradient(155deg, #221c5c 0%, #10132a 50%, #0a2a30 100%)); }
 body {
   margin: 0;
   font-family: var(--font);
@@ -195,10 +195,11 @@ html.in-game .stage .btn.big { font-size: 1.2rem; min-height: 3.5rem; padding: 0
 .lobby { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .join-panel { display: flex; align-items: stretch; justify-content: center; gap: 1rem; padding: 1.6rem 1rem 1.2rem; flex-wrap: wrap; }
 .join-how, .pin-box { background: var(--panel); border: 1px solid var(--panel-line); border-radius: var(--radius); box-shadow: var(--shadow); }
-.join-how { padding: 1rem 1.6rem; display: flex; flex-direction: column; justify-content: center; font-size: 1.3rem; max-width: 28rem; }
+.join-how { padding: 1rem 1.6rem; display: flex; flex-direction: column; justify-content: center; font-size: 1.3rem; max-width: min(48rem, 100%); }
 .join-how p { margin: 0; }
 .join-how .or { font-size: 1rem; color: var(--text-dim); margin-top: .3rem; }
-.join-how b { word-break: break-all; color: var(--accent); }
+.join-how b { color: var(--accent); }
+.join-how b span { white-space: nowrap; }
 .pin-box { padding: .8rem 1.6rem; display: flex; flex-direction: column; justify-content: center; }
 .pin-box span { font-size: 1rem; color: var(--text-dim); }
 .pin-box strong { font-size: 4.6rem; font-weight: 700; letter-spacing: .04em; line-height: 1; font-variant-numeric: tabular-nums; }
@@ -220,8 +221,9 @@ html.in-game .stage .btn.big { font-size: 1.2rem; min-height: 3.5rem; padding: 0
 /* Get ready */
 .getready { margin: auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1.6rem; }
 .gr-label { font-size: 3.2rem; font-weight: 700; }
-.gr-count { width: 11rem; height: 11rem; border-radius: 50%; display: grid; place-items: center; font-size: 5.5rem; font-weight: 700; border: .4rem solid var(--accent); color: var(--accent); background: rgba(62,230,181,.06); }
+.gr-count { width: 11rem; height: 11rem; border-radius: 50%; display: grid; place-items: center; font-size: 5.5rem; font-weight: 700; border: .4rem solid var(--accent); color: var(--accent); background: rgba(8,10,24,.45); }
 .gr-count.bump { animation: bump .4s; }
+.timer-ring span, .gr-count span { position: relative; line-height: 1; text-box: trim-both cap alphabetic; }
 @keyframes bump { 0% { transform: scale(1.2); } 100% { transform: scale(1); } }
 .gr-sub { font-size: 1.35rem; color: var(--text-dim); }
 .gr-sub b { color: var(--accent); }
@@ -247,9 +249,12 @@ html.in-game .stage .btn.big { font-size: 1.2rem; min-height: 3.5rem; padding: 0
 /* Answering */
 .answering, .reveal { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .q-mid { flex: 1; min-height: 0; display: grid; grid-template-columns: 10rem 1fr 10rem; align-items: center; gap: 1.2rem; padding: 1rem 1.6rem; }
-.timer-ring { --p: 1; justify-self: center; width: 7.5rem; height: 7.5rem; border-radius: 50%; display: grid; place-items: center; font-size: 2.8rem; font-weight: 700; font-variant-numeric: tabular-nums;
-  background: radial-gradient(closest-side, var(--bg-2) 80%, transparent 81%), conic-gradient(var(--accent) calc(var(--p) * 360deg), rgba(255,255,255,.1) 0); }
-.timer-ring.urgent { color: #ff8fb5; background: radial-gradient(closest-side, var(--bg-2) 80%, transparent 81%), conic-gradient(#ff5f93 calc(var(--p) * 360deg), rgba(255,255,255,.1) 0); animation: pulse 1s infinite; }
+.timer-ring { position: relative; justify-self: center; width: 7.5rem; height: 7.5rem; display: grid; place-items: center; font-size: 2.8rem; font-weight: 700; }
+.timer-ring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.timer-ring .tr-track { fill: rgba(8,10,24,.6); stroke: rgba(255,255,255,.1); stroke-width: 9; }
+.timer-ring .tr-arc { fill: none; stroke: var(--accent); stroke-width: 9; transition: stroke-dasharray .1s linear; }
+.timer-ring.urgent { color: #ff8fb5; animation: pulse 1s infinite; }
+.timer-ring.urgent .tr-arc { stroke: #ff5f93; }
 @keyframes pulse { 50% { transform: scale(1.06); } }
 .q-side { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
 .ans-count { display: flex; flex-direction: column; align-items: center; font-size: 1.05rem; color: var(--text-dim); }
@@ -334,7 +339,7 @@ body.player { min-height: 100vh; min-height: 100dvh; transition: background-colo
 .youre-in { font-size: clamp(1.6rem, 7vw, 2.4rem); }
 .big-sub { font-size: 1.15rem; font-weight: 600; }
 .name-pill { background: var(--panel-2); border: 1px solid rgba(255,255,255,.2); padding: .5rem 1.3rem; border-radius: 999px; font-size: 1.45rem; font-weight: 700; margin: .5rem 0 1rem; overflow-wrap: anywhere; }
-.q-of { font-size: 1rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: .1em; font-weight: 700; }
+.q-of { font-size: 1rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: .1em; padding-left: .1em; font-weight: 700; }
 .loader-shapes { display: flex; gap: .6rem; margin-top: 1rem; }
 .loader-shapes > span { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; animation: hop 1.2s ease-in-out infinite; }
 .loader-shapes > span:nth-child(2) { animation-delay: .15s; } .loader-shapes > span:nth-child(3) { animation-delay: .3s; } .loader-shapes > span:nth-child(4) { animation-delay: .45s; }

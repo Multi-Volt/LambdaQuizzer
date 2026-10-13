@@ -189,7 +189,7 @@
     stage().innerHTML = `<div class="lobby">
       <div class="join-panel">
         <div class="join-how">
-          <p>Join at <b>${esc(shortJoinUrl())}</b></p>
+          <p>Join at <b>${shortJoinUrl().split('/').map(s => `<span>${esc(s)}</span>`).join('/<wbr>')}</b></p>
           <p class="or">or scan the QR code with your phone camera</p>
         </div>
         <div class="pin-box"><span>Game PIN:</span><strong>${G.pin.slice(0, 3)} ${G.pin.slice(3)}</strong></div>
@@ -316,7 +316,7 @@
     stage().innerHTML = `<div class="answering">
       <div class="q-banner"><h1 class="q-text">${esc(c.text)}</h1></div>
       <div class="q-mid">
-        <div class="timer-ring" id="tRing" style="--p:1"><span id="tLeft">${c.time}</span></div>
+        <div class="timer-ring" id="tRing"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="tr-track" cx="50" cy="50" r="45"/><circle class="tr-arc" id="tArc" cx="50" cy="50" r="45" pathLength="100" stroke-dasharray="100 100"/></svg><span id="tLeft">${c.time}</span></div>
         ${imageHtml(c) || '<div class="q-image placeholder"><img src="assets/logo.svg" alt=""></div>'}
         <div class="q-side">
           <div class="ans-count"><b id="aCount">0</b><span>Answers</span></div>
@@ -333,8 +333,8 @@
       const sec = Math.max(0, Math.ceil(left));
       const el = $('#tLeft');
       if (el) el.textContent = sec;
-      const ring = $('#tRing');
-      if (ring) ring.style.setProperty('--p', Math.max(0, left / c.time).toFixed(3));
+      const arc = $('#tArc');
+      if (arc) arc.setAttribute('stroke-dasharray', `${(Math.max(0, left / c.time) * 100).toFixed(2)} 100`);
       if (sec !== G.lastSec) {
         G.lastSec = sec;
         if (sec <= 5 && sec > 0) { A.sfx('tickUrgent'); const r = $('#tRing'); if (r) r.classList.add('urgent'); }
