@@ -42,9 +42,16 @@ Montserrat from Google Fonts.
 
 ## Deploying to GitHub Pages
 
-Push this repository to GitHub, then go to **Settings → Pages**, set **Source** to
-*Deploy from a branch*, pick `main` and `/ (root)`, and save. The site will be at
-`https://<your-username>.github.io/LambdaQuizzer/`.
+Deployment is automatic. `.github/workflows/pages.yml` checks the JavaScript and publishes the site
+on every push to `main` (you can also run it by hand from the **Actions** tab). One-time setup:
+
+1. Push this repository to GitHub.
+2. Go to **Settings → Pages** and set **Source** to **GitHub Actions**.
+3. Push again, or re-run the workflow. The site will be at
+   `https://<your-username>.github.io/LambdaQuizzer/`.
+
+Only the site files (`index.html`, `host.html`, `assets/`, `css/`, `js/`, `vendor/`) are published,
+not the tests.
 
 ## Running locally
 
