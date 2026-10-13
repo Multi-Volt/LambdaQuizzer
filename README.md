@@ -99,6 +99,7 @@ Music by Kevin MacLeod ([incompetech.com](https://incompetech.com)):
   - "Local Forecast - Slower"
   - "Lord of the Rangs"
   - "Meatball Parade"
+  - "Mystery Bazaar"
   - "Mystery!"
   - "Newer Wave"
   - "One-eyed Maestro"
