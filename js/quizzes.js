@@ -30,6 +30,31 @@
           q('What does "git commit -m" do?', ['Deletes a branch', 'Saves a snapshot with a message', 'Pushes to GitHub', 'Merges two branches'], [1]),
           q('Which of these is NOT a programming language?', ['Python', 'Rust', 'Haskell', 'Photoshop'], [3], { points: 2, time: 20 })
         ]
+      },
+      {
+        id: LQ.randomId(10), title: 'Random Trivia', description: 'Twenty questions on a bit of everything.', updated: Date.now(),
+        questions: [
+          q('What is the largest planet in our solar system?', ['Saturn', 'Neptune', 'Jupiter', 'Earth'], [2]),
+          q('How many hearts does an octopus have?', ['One', 'Two', 'Three', 'Eight'], [2]),
+          tf('Honey found in ancient Egyptian tombs was still edible.', true),
+          q('What is the chemical symbol for gold?', ['Go', 'Gd', 'Ag', 'Au'], [3]),
+          q('Which country has the most people?', ['India', 'China', 'United States', 'Indonesia'], [0]),
+          q('What is the smallest prime number?', ['0', '1', '2', '3'], [2]),
+          tf('The Great Wall of China is visible to the naked eye from the Moon.', false),
+          q('Who painted the Mona Lisa?', ['Michelangelo', 'Leonardo da Vinci', 'Raphael', 'Donatello'], [1]),
+          q('What is the hardest natural substance?', ['Diamond', 'Quartz', 'Titanium', 'Graphite'], [0]),
+          q('Which ocean is the largest?', ['Atlantic', 'Indian', 'Arctic', 'Pacific'], [3]),
+          tf('Bananas are berries, but strawberries are not.', true),
+          q('In what year did the Titanic sink?', ['1905', '1912', '1918', '1923'], [1]),
+          q('What is the capital of Australia?', ['Sydney', 'Melbourne', 'Canberra', 'Perth'], [2], { points: 2 }),
+          q('How many bones are in the adult human body?', ['186', '206', '226', '306'], [1]),
+          q('Which planet is known as the Red Planet?', ['Mars', 'Venus', 'Mercury', 'Jupiter'], [0], { time: 10 }),
+          tf('Sound travels faster in water than in air.', true),
+          q('What is the longest river in South America?', ['Paraná', 'Orinoco', 'Amazon', 'Magdalena'], [2]),
+          q('Which instrument has 88 keys?', ['Organ', 'Accordion', 'Harpsichord', 'Piano'], [3], { time: 10 }),
+          q('What gas do plants absorb from the air for photosynthesis?', ['Oxygen', 'Carbon dioxide', 'Nitrogen', 'Hydrogen'], [1]),
+          q('How many sides does a hexagon have?', ['Five', 'Six', 'Seven', 'Eight'], [1], { time: 10, points: 2 })
+        ]
       }
     ];
   }
