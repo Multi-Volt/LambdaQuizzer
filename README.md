@@ -39,10 +39,18 @@ host's peer name); game traffic then goes peer-to-peer, through PeerJS's public 
 network blocks direct connections. Some locked-down campus networks block WebRTC entirely; if
 students can't join, have them switch to mobile data.
 
-**Question music:** drop audio files into `assets/music/question/` and push; one is picked at
-random for each question. The deploy workflow rebuilds the track list
-(`assets/music/question/tracks.json`, via `tools/music_list.py`) automatically. Lobby and results
-music are set in the `TRACKS` list in `js/audio.js`.
+**Music.** `tools/music.py` pulls tracks straight from the Incompetech catalog and files them
+in the right place. Each download gets a tidy file name, its silent intro trimmed and its loudness
+matched to the rest (needs `ffmpeg`), and the track list and the Credits below are updated:
+
+    python3 tools/music.py search bouncy bright          # browse: title, length, bpm, mood
+    python3 tools/music.py add "Run Amok" "Cipher"       # add to the question playlist
+    python3 tools/music.py add "Wallpaper" --to lobby    # replace lobby music (or --to results)
+    python3 tools/music.py remove "Run Amok"
+    python3 tools/music.py tidy                          # clean up files you dropped in by hand
+
+You can also just drop audio files into `assets/music/question/` and push: the deploy workflow
+rebuilds the playlist (`tracks.json`) every time. One track is picked at random per question.
 
 Libraries are vendored in `vendor/` (PeerJS 1.5.4, qrcode-generator 1.4.4). The font is
 Space Grotesk from Google Fonts.
@@ -77,15 +85,14 @@ the podium, and the CSV download.
 
 ## Credits
 
-Music by Kevin MacLeod ([incompetech.com](https://incompetech.com)), loudness-matched and
-re-encoded at 128 kbps:
+<!-- music-credits:start -->
+Music by Kevin MacLeod ([incompetech.com](https://incompetech.com)):
 
 - Lobby: "Monkeys Spinning Monkeys"
-- Questions (a random one each question): "I Got a Stick Arr Bryan Teoh", "Newer Wave",
-  "Raving Energy (faster)", "Voxel Revolution", "Cyborg Ninja", "Pinball Spring 160",
-  "Laserpack", "Jaunty Gumption", "Bit Shift", "Happy Happy Game Show"
+- Questions (a random one each question): "Bit Shift", "Cipher", "Cyborg Ninja", "Happy Happy Game Show", "I Got a Stick Arr Bryan Teoh", "Jaunty Gumption", "Laserpack", "Local Forecast - Slower", "Newer Wave", "Pinball Spring 160", "Raving Energy (faster)", "Run Amok", "Scheming Weasel (faster version)", "Sneaky Snitch", "Voxel Revolution"
 - Scoreboard and results: "Itty Bitty 8 Bit"
 
 Used under a license from incompetech. Without a paid license these tracks are available under
 [Creative Commons: By Attribution 4.0](https://creativecommons.org/licenses/by/4.0/), which needs
 this credit.
+<!-- music-credits:end -->

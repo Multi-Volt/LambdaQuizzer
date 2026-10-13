@@ -1,3 +1,4 @@
 tests/out/
 __pycache__/
+tools/.cache/
 assets/music/question/zz-dropped-in.mp3
