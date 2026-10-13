@@ -103,39 +103,47 @@
 
   /* ---------- music: Incompetech tracks by Kevin MacLeod, streamed from assets/music ---------- */
 
-  // Each entry is a file name, or { file, start } to skip a quiet intro (seconds).
   // shuffle: pick a random file (never the same twice in a row) and start it from the top every time.
   // Otherwise the single track resumes where it left off.
+  // Question music is every audio file in assets/music/question/ (see loadQuestionList).
   const MUSIC_DIR = 'assets/music/';
+  const QUESTION_DIR = 'question/';
   const TRACKS = {
     lobby: { files: ['monkeys-spinning-monkeys.mp3'] },
-    question: {
-      shuffle: true,
-      files: [
-        'i-got-a-stick-arr-bryan-teoh.mp3',
-        { file: 'newer-wave.mp3', start: 1.5 },
-        'raving-energy-faster.mp3',
-        'voxel-revolution.mp3',
-        'cyborg-ninja.mp3',
-        'pinball-spring-160.mp3',
-        'laserpack.mp3',
-        'jaunty-gumption.mp3',
-        'bit-shift.mp3',
-        'happy-happy-game-show.mp3'
-      ]
-    },
+    question: { shuffle: true, files: [] },
     results: { files: ['itty-bitty-8-bit.mp3'] }
   };
   const decks = {};     // file -> { el, gain, stopTimer }
-  const cued = {};      // track name -> entry for its next play
+  const cued = {};      // track name -> file for its next play
   const lastPick = {};  // track name -> file played last time
   let songName = null, songDeck = null;
 
-  const entry = f => typeof f === 'string' ? { file: f, start: 0 } : { file: f.file, start: f.start || 0 };
+  const AUDIO_EXT = /\.(mp3|ogg|oga|opus|m4a|aac|wav|flac|webm)$/i;
+  let questionList = null;
+
+  // tracks.json is written by tools/music_list.py on deploy. Local servers that list folders
+  // (python3 -m http.server) also expose new files directly, so both sources are merged.
+  function loadQuestionList() {
+    if (questionList) return questionList;
+    const base = MUSIC_DIR + QUESTION_DIR;
+    const fromJson = fetch(base + 'tracks.json', { cache: 'no-cache' })
+      .then(r => r.ok ? r.json() : []).then(a => Array.isArray(a) ? a : []).catch(() => []);
+    const fromListing = fetch(base, { cache: 'no-cache' })
+      .then(r => r.ok && /html/.test(r.headers.get('content-type') || '') ? r.text() : '')
+      .then(html => Array.from(html.matchAll(/href="([^"?#/]+)"/g), m => decodeURIComponent(m[1])))
+      .catch(() => []);
+    questionList = Promise.all([fromJson, fromListing]).then(([a, b]) => {
+      const files = Array.from(new Set(a.concat(b).map(String).filter(f => AUDIO_EXT.test(f) && !f.includes('/'))));
+      TRACKS.question.files = files.map(f => QUESTION_DIR + f);
+      if (!files.length) console.warn('LambdaQuizzer: no question music found in ' + base);
+      return files;
+    });
+    return questionList;
+  }
 
   function deck(file) {
     if (decks[file]) return decks[file];
-    const el = new Audio(MUSIC_DIR + file);
+    const el = new Audio(MUSIC_DIR + file.split('/').map(encodeURIComponent).join('/'));
     el.loop = true;
     el.preload = 'auto';
     const gain = ctx.createGain();
@@ -147,9 +155,9 @@
 
   function pickFor(name) {
     const t = TRACKS[name];
-    const list = t.files.map(entry);
-    if (!t.shuffle || list.length === 1) return list[0];
-    const choices = list.filter(e => e.file !== lastPick[name]);
+    if (!t.files.length) return null;
+    if (!t.shuffle || t.files.length === 1) return t.files[0];
+    const choices = t.files.filter(f => f !== lastPick[name]);
     return choices[Math.floor(Math.random() * choices.length)];
   }
 
@@ -157,25 +165,27 @@
   function cueMusic(name) {
     if (!init() || !TRACKS[name]) return;
     if (!cued[name]) cued[name] = pickFor(name);
-    deck(cued[name].file);
+    if (cued[name]) deck(cued[name]);
   }
 
   function preloadMusic() {
     if (!init()) return;
-    Object.keys(TRACKS).forEach(cueMusic);
+    cueMusic('lobby'); cueMusic('results');
+    loadQuestionList().then(() => cueMusic('question'));
   }
 
   function playMusic(name) {
     if (!init() || !TRACKS[name] || songName === name) return;
     stopMusic(0.4);
     const t = TRACKS[name];
-    const e = cued[name] || pickFor(name);
-    cued[name] = t.shuffle ? null : e;
-    lastPick[name] = e.file;
+    const file = cued[name] || pickFor(name);
+    if (!file) return;
+    cued[name] = t.shuffle ? null : file;
+    lastPick[name] = file;
     songName = name;
-    const d = songDeck = deck(e.file);
+    const d = songDeck = deck(file);
     clearTimeout(d.stopTimer);
-    if (t.shuffle) d.el.currentTime = e.start;
+    if (t.shuffle) d.el.currentTime = 0;
     const now = ctx.currentTime;
     d.gain.gain.cancelScheduledValues(now);
     d.gain.gain.setValueAtTime(d.gain.gain.value, now);

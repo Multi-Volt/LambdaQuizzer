@@ -39,8 +39,10 @@ host's peer name); game traffic then goes peer-to-peer, through PeerJS's public 
 network blocks direct connections. Some locked-down campus networks block WebRTC entirely; if
 students can't join, have them switch to mobile data.
 
-To change the music, drop MP3s in `assets/music/` and edit the `TRACKS` list in `js/audio.js`. The
-question playlist can hold any number of tracks; one is picked at random each question.
+**Question music:** drop audio files into `assets/music/question/` and push; one is picked at
+random for each question. The deploy workflow rebuilds the track list
+(`assets/music/question/tracks.json`, via `tools/music_list.py`) automatically. Lobby and results
+music are set in the `TRACKS` list in `js/audio.js`.
 
 Libraries are vendored in `vendor/` (PeerJS 1.5.4, qrcode-generator 1.4.4). The font is
 Space Grotesk from Google Fonts.

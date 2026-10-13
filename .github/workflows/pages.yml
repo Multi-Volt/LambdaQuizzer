@@ -23,6 +23,9 @@ jobs:
       - name: Check JavaScript syntax
         run: for f in js/*.js; do node --check "$f"; done
 
+      - name: List question music
+        run: python3 tools/music_list.py
+
       - name: Collect site files
         run: |
           mkdir _site

@@ -42,7 +42,19 @@ def check(cond, msg):
     print('  ok:', msg)
 
 
+DROPPED = os.path.join(SITE, 'assets', 'music', 'question', 'zz-dropped-in.mp3')
+
+
 def main():
+    import shutil
+    shutil.copy(os.path.join(SITE, 'assets', 'music', 'question', 'bit-shift.mp3'), DROPPED)
+    try:
+        serve_and_run()
+    finally:
+        os.remove(DROPPED)
+
+
+def serve_and_run():
     server = subprocess.Popen([sys.executable, '-m', 'http.server', str(PORT)], cwd=SITE,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     time.sleep(0.8)
@@ -82,6 +94,9 @@ def run(browser):
     pin = host.inner_text('.pin-box strong').replace(' ', '')
     check(len(pin) == 6, f'host got PIN {pin}')
     qr_href = host.get_attribute('.qr', 'href')
+    # A track dropped into the folder (not in tracks.json) is found via the server's folder listing.
+    found = host.evaluate("fetch('assets/music/question/').then(r => r.text()).then(t => t.includes('zz-dropped-in.mp3'))")
+    check(found, 'new question track visible in folder listing')
     host.wait_for_function("LQAudio.playing === 'lobby'")
     host.wait_for_timeout(1500)
     check(music.get('monkeys-spinning-monkeys.mp3') in (200, 206), 'lobby music file loads')
@@ -192,7 +207,7 @@ def run(browser):
             host.click('#nextBtn')
 
     check(music.get('itty-bitty-8-bit.mp3') in (200, 206), 'results music file loads')
-    q_tracks = [f for f, st in music.items() if st in (200, 206) and f not in ('monkeys-spinning-monkeys.mp3', 'itty-bitty-8-bit.mp3')]
+    q_tracks = [f for f, st in music.items() if st in (200, 206) and f.endswith('.mp3') and f not in ('monkeys-spinning-monkeys.mp3', 'itty-bitty-8-bit.mp3')]
     check(len(q_tracks) >= 2, f'question music shuffles between tracks ({", ".join(sorted(q_tracks))})')
     host.wait_for_selector('#pod1.show', timeout=10000)
     host.wait_for_timeout(1200)

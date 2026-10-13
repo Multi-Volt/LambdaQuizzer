@@ -193,21 +193,23 @@ html.in-game .stage .btn.big { font-size: 1.2rem; min-height: 3.5rem; padding: 0
 
 /* Lobby */
 .lobby { display: flex; flex-direction: column; flex: 1; min-height: 0; }
-.join-panel { display: flex; align-items: stretch; justify-content: center; gap: 1.2rem; padding: 2rem 1rem 1.4rem; flex-wrap: wrap; }
+.join-panel { display: flex; align-items: stretch; justify-content: center; gap: 1rem; padding: 1.6rem 1rem 1.2rem; flex-wrap: wrap; }
 .join-how, .pin-box { background: var(--panel); border: 1px solid var(--panel-line); border-radius: var(--radius); box-shadow: var(--shadow); }
-.join-how { padding: 1rem 1.8rem; display: flex; flex-direction: column; justify-content: center; font-size: 1.6rem; max-width: 32rem; }
+.join-how { padding: 1rem 1.6rem; display: flex; flex-direction: column; justify-content: center; font-size: 1.3rem; max-width: 28rem; }
 .join-how p { margin: 0; }
 .join-how .or { font-size: 1rem; color: var(--text-dim); margin-top: .3rem; }
 .join-how b { word-break: break-all; color: var(--accent); }
-.pin-box { padding: 1rem 2rem; display: flex; flex-direction: column; justify-content: center; }
-.pin-box span { font-size: 1.15rem; color: var(--text-dim); }
-.pin-box strong { font-size: 7.5rem; font-weight: 700; letter-spacing: .04em; line-height: 1; font-variant-numeric: tabular-nums; }
-.qr { background: #fff; padding: .7rem; width: 15rem; display: block; border-radius: var(--radius); box-shadow: var(--shadow); }
+.pin-box { padding: .8rem 1.6rem; display: flex; flex-direction: column; justify-content: center; }
+.pin-box span { font-size: 1rem; color: var(--text-dim); }
+.pin-box strong { font-size: 4.6rem; font-weight: 700; letter-spacing: .04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.qr { background: #fff; padding: .5rem; width: 9rem; display: block; border-radius: var(--radius); box-shadow: var(--shadow); }
 .qr svg { width: 100%; height: auto; display: block; }
-.lobby-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .6rem 1.4rem; flex-wrap: wrap; }
+.lobby-bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; padding: .6rem 1.4rem; }
+.lobby-bar .count { justify-self: start; }
+.lobby-bar .row { justify-self: end; }
 .count { display: flex; align-items: center; gap: .5rem; background: var(--panel); border: 1px solid var(--panel-line); border-radius: 999px; padding: .35rem 1.1rem; font-size: 1.05rem; }
 .count b { font-size: 1.7rem; font-weight: 700; color: var(--accent); }
-.lobby-title { font-size: 1.6rem; font-weight: 700; text-align: center; flex: 1; }
+.lobby-title { font-size: 1.6rem; font-weight: 700; text-align: center; overflow-wrap: anywhere; }
 .lobby-players { display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: .7rem; padding: 1.2rem; flex: 1; overflow: auto; }
 .waiting-note { margin-top: 2rem; font-size: 1.4rem; color: var(--text-dim); }
 .chip { border: 1px solid rgba(255,255,255,.2); font-weight: 700; font-size: 1.5rem; color: #fff; background: var(--panel-2); padding: .45rem 1.1rem; border-radius: 999px; cursor: pointer; }
@@ -379,7 +381,9 @@ body[data-screen="late"] .result-icon { color: var(--late); }
   .tile { min-height: 3.6rem; font-size: 1.2rem; }
   .q-mid, .chart-row { grid-template-columns: auto 1fr auto; padding: .8rem; }
   .timer-ring { width: 5rem; height: 5rem; font-size: 1.8rem; }
-  .pin-box strong { font-size: 3.4rem; }
+  .pin-box strong { font-size: 3.2rem; }
+  .lobby-bar { grid-template-columns: 1fr; justify-items: center; }
+  .lobby-bar .count, .lobby-bar .row { justify-self: center; }
   .gamebar { padding: 0 .6rem; gap: .5rem; }
   .gamebar .brand.small span { display: none; }
   .gb-progress { display: none; }
