@@ -30,15 +30,6 @@
           q('What does "git commit -m" do?', ['Deletes a branch', 'Saves a snapshot with a message', 'Pushes to GitHub', 'Merges two branches'], [1]),
           q('Which of these is NOT a programming language?', ['Python', 'Rust', 'Haskell', 'Photoshop'], [3], { points: 2, time: 20 })
         ]
-      },
-      {
-        id: LQ.randomId(10), title: 'Campus Life Speed Round', description: 'Fast, silly questions for an icebreaker.', updated: Date.now(),
-        questions: [
-          q('Best time to start a 10-page paper due tomorrow?', ['Two weeks ago', 'Right now', 'After one more episode', '11:59 PM'], [0, 1], { time: 10 }),
-          tf('Coffee counts as a food group during finals week.', true, { time: 5, points: 0 }),
-          q('Roughly how many hours are in a 15-week semester?', ['360', '1,500', '2,520', '10,080'], [2], { time: 20 }),
-          q('What does "GPA" stand for?', ['Grade Point Average', 'General Performance Assessment', 'Grand Party Attendance', 'Graded Paper Allowance'], [0], { time: 10 })
-        ]
       }
     ];
   }

@@ -47,7 +47,7 @@ DROPPED = os.path.join(SITE, 'assets', 'music', 'question', 'zz-dropped-in.mp3')
 
 def main():
     import shutil
-    shutil.copy(os.path.join(SITE, 'assets', 'music', 'question', 'bit-shift.mp3'), DROPPED)
+    shutil.copy(os.path.join(SITE, 'assets', 'music', 'question', 'cipher.mp3'), DROPPED)
     try:
         serve_and_run()
     finally:
