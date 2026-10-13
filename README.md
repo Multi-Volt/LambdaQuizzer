@@ -47,10 +47,12 @@ matched to the rest (needs `ffmpeg`), and the track list and the Credits below a
     python3 tools/music.py add "Run Amok" "Cipher"       # add to the question playlist
     python3 tools/music.py add "Wallpaper" --to lobby    # replace lobby music (or --to results)
     python3 tools/music.py remove "Run Amok"
-    python3 tools/music.py tidy                          # clean up files you dropped in by hand
+    python3 tools/music.py                               # after dropping files in by hand
 
-You can also just drop audio files into `assets/music/question/` and push: the deploy workflow
-rebuilds the playlist (`tracks.json`) every time. One track is picked at random per question.
+Dropped files into `assets/music/question/` yourself? Run `python3 tools/music.py` with no arguments:
+it renames and volume-matches them, adds them to the playlist and credits them below. (Even if you
+forget, the deploy workflow still adds them to the playlist; only the credits need the script.)
+One track is picked at random per question.
 
 Libraries are vendored in `vendor/` (PeerJS 1.5.4, qrcode-generator 1.4.4). The font is
 Space Grotesk from Google Fonts.
@@ -89,10 +91,23 @@ the podium, and the CSV download.
 Music by Kevin MacLeod ([incompetech.com](https://incompetech.com)):
 
 - Lobby: "Monkeys Spinning Monkeys"
-- Questions (a random one each question): "Bit Shift", "Cipher", "Cyborg Ninja", "Happy Happy Game Show", "I Got a Stick Arr Bryan Teoh", "Jaunty Gumption", "Laserpack", "Local Forecast - Slower", "Newer Wave", "Pinball Spring 160", "Raving Energy (faster)", "Run Amok", "Scheming Weasel (faster version)", "Sneaky Snitch", "Voxel Revolution"
+- Questions (a random one each question):
+  - "Bit Shift"
+  - "Carnivale Intrigue"
+  - "Cipher"
+  - "Cyborg Ninja"
+  - "Happy Happy Game Show"
+  - "I Got a Stick Arr Bryan Teoh"
+  - "Jaunty Gumption"
+  - "Laserpack"
+  - "Local Forecast - Slower"
+  - "Newer Wave"
+  - "Pinball Spring 160"
+  - "Raving Energy (faster)"
+  - "Run Amok"
+  - "Scheming Weasel (faster version)"
+  - "Sneaky Snitch"
+  - "The Complex"
+  - "Voxel Revolution"
 - Scoreboard and results: "Itty Bitty 8 Bit"
-
-Used under a license from incompetech. Without a paid license these tracks are available under
-[Creative Commons: By Attribution 4.0](https://creativecommons.org/licenses/by/4.0/), which needs
-this credit.
 <!-- music-credits:end -->

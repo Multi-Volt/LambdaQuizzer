@@ -5,12 +5,13 @@
     python3 tools/music.py add "Wallpaper" --to lobby      replace the lobby music
     python3 tools/music.py add "Local Forecast" --to results
     python3 tools/music.py remove "Run Amok"        take a track out of the question playlist
-    python3 tools/music.py tidy                     clean up files dropped in by hand
-    python3 tools/music.py credits                  rebuild tracks.json and the README credits
+    python3 tools/music.py                          sync: add files dropped into assets/music/question/
+                                                    to the playlist and the README credits
 
 Every downloaded track gets a tidy file name, its silent intro trimmed and its loudness matched to
-the others (needs ffmpeg; without it the file is copied as-is). The question track list
-(assets/music/question/tracks.json) and the Credits section of README.md are updated each time.
+the others (needs ffmpeg; without it the file is copied as-is). Every command also picks up files
+dropped into the question folder by hand, and updates the question track list
+(assets/music/question/tracks.json) and the Credits section of README.md.
 No third-party Python packages are needed.
 """
 import argparse, json, os, re, shutil, subprocess, sys, tempfile, urllib.parse, urllib.request
@@ -154,12 +155,9 @@ def rebuild(pieces=None):
         'Music by Kevin MacLeod ([incompetech.com](https://incompetech.com)):',
         '',
         f'- Lobby: {quote(lobby_title)}' if lobby else '',
-        f'- Questions (a random one each question): ' + (', '.join(map(quote, q_titles)) or 'none'),
+        '- Questions (a random one each question):' + ('' if q_titles else ' none'),
+        *[f'  - {quote(t)}' for t in q_titles],
         f'- Scoreboard and results: {quote(results_title)}' if results else '',
-        '',
-        'Used under a license from incompetech. Without a paid license these tracks are available under',
-        '[Creative Commons: By Attribution 4.0](https://creativecommons.org/licenses/by/4.0/), which needs',
-        'this credit.',
         END,
     ])
     with open(README, encoding='utf-8') as f:
@@ -185,6 +183,7 @@ def cmd_search(args):
 
 def cmd_add(args):
     pieces = catalog()
+    tidy(pieces)
     credits = load_credits()
     if args.to != 'question' and len(args.titles) != 1:
         sys.exit(f'--to {args.to} takes exactly one track')
@@ -230,9 +229,8 @@ def cmd_remove(args):
     rebuild()
 
 
-def cmd_tidy(args):
+def tidy(pieces):
     """Rename and loudness-match files that were dropped into the question folder by hand."""
-    pieces = catalog()
     credits = load_credits()
     for f in question_files():
         stem, ext = os.path.splitext(f)
@@ -253,12 +251,17 @@ def cmd_tidy(args):
             os.replace(tmp, dest)
         credits['question/' + out] = title
     save_credits(credits)
+
+
+def cmd_sync(args):
+    pieces = catalog()
+    tidy(pieces)
     rebuild(pieces)
 
 
 def main():
     ap = argparse.ArgumentParser(description='Manage LambdaQuizzer music from incompetech.com')
-    sub = ap.add_subparsers(dest='cmd', required=True)
+    sub = ap.add_subparsers(dest='cmd')
     s = sub.add_parser('search', help='search the catalog')
     s.add_argument('words', nargs='+')
     s.add_argument('--limit', type=int, default=30)
@@ -271,10 +274,9 @@ def main():
     r = sub.add_parser('remove', help='remove question tracks by title or file name')
     r.add_argument('titles', nargs='+')
     r.set_defaults(fn=cmd_remove)
-    sub.add_parser('tidy', help='clean up hand-added files').set_defaults(fn=cmd_tidy)
-    sub.add_parser('credits', help='rebuild tracks.json and README credits').set_defaults(fn=lambda a: rebuild())
+    sub.add_parser('sync', help='(default) tidy hand-added files, rebuild playlist and credits').set_defaults(fn=cmd_sync)
     args = ap.parse_args()
-    args.fn(args)
+    (getattr(args, 'fn', None) or cmd_sync)(args)
 
 
 if __name__ == '__main__':
