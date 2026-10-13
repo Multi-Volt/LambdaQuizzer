@@ -92,17 +92,11 @@ Music by Kevin MacLeod ([incompetech.com](https://incompetech.com)):
 
 - Lobby: "Monkeys Spinning Monkeys"
 - Questions (a random one each question):
-  - "Bit Shift"
   - "Carnivale Intrigue"
   - "Cipher"
-  - "Cyborg Ninja"
-  - "Happy Happy Game Show"
-  - "I Got a Stick Arr Bryan Teoh"
   - "Jaunty Gumption"
-  - "Laserpack"
   - "Local Forecast - Slower"
   - "Newer Wave"
-  - "Pinball Spring 160"
   - "Raving Energy (faster)"
   - "Run Amok"
   - "Scheming Weasel (faster version)"
